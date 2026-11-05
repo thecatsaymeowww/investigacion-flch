@@ -1,0 +1,15 @@
+# Prettier también respeta .gitignore (node_modules, .next, media, .env…).
+
+# Generado por Payload (`pnpm generate`, `pnpm migrate:create`): se regenera, no se edita a mano.
+payload-types.ts
+app/(payload)/
+migrations/
+
+# Lo escribe pnpm.
+pnpm-lock.yaml
+
+# Documentación con tablas largas mantenidas a mano: Prettier las rellenaría con espacios en cada cambio.
+*.md
+
+# Archivos estáticos que se sirven tal cual.
+public/

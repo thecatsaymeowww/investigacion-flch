@@ -1,0 +1,145 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--papel);
+  border-bottom: 1px solid var(--tinta);
+}
+.inner {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 12px var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.marca {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-width: 0;
+}
+.logo {
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 19px;
+  color: var(--tinta);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+/* Subgrupo: enlace al grupo padre (jerarquía visual) */
+.padre {
+  font-family: var(--f-etiqueta);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--azul);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-left: 1px solid var(--divisor);
+  padding-left: 14px;
+}
+.padre:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .marca {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .padre {
+    border-left: 0;
+    padding-left: 0;
+    font-size: 10px;
+  }
+}
+.der,
+.links {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  font-family: var(--f-etiqueta);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.der a {
+  color: var(--tinta);
+  text-decoration: none;
+}
+.der a:hover {
+  color: var(--azul);
+}
+.links .cta {
+  color: var(--azul);
+  border-bottom: 1.5px solid var(--azul);
+  padding-bottom: 1px;
+}
+
+/* Sello de tinta "Archivo" */
+.der .sello {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--azul);
+  border: 2px solid var(--azul);
+  outline: 1px solid var(--azul);
+  outline-offset: 2px;
+  padding: 4px 10px 3px;
+  transform: rotate(-3deg);
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  opacity: 0.88;
+  border-radius: 2px;
+  white-space: nowrap;
+  mask-image: radial-gradient(circle at 20% 30%, #000 60%, rgba(0, 0, 0, 0.75) 61%), radial-gradient(circle, #000 1px, rgba(0, 0, 0, 0.82) 1.4px);
+  mask-size:
+    100% 100%,
+    4px 4px;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  transition:
+    transform 0.2s,
+    background-color 0.2s,
+    color 0.2s,
+    opacity 0.2s;
+}
+.sello::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.der .sello:hover {
+  transform: rotate(0deg) scale(1.05);
+  opacity: 1;
+  background: var(--azul);
+  color: var(--papel);
+}
+
+/* Por debajo de 1200px los enlaces no caben en una fila: solo quedan logo y sello */
+@media (max-width: 1199px) {
+  .links {
+    display: none;
+  }
+}
+@media (max-width: 360px) {
+  .logo {
+    font-size: 17px;
+  }
+  .der .sello {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    padding: 4px 8px 3px;
+  }
+}

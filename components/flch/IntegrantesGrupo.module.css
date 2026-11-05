@@ -1,0 +1,225 @@
+.intro {
+  margin: 0 0 24px;
+  max-width: 720px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--texto-2);
+  text-wrap: pretty;
+}
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
+  gap: 16px;
+}
+@media (max-width: 519px) {
+  .grilla {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+  }
+}
+
+.tarjeta {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+.tarjeta:hover {
+  box-shadow: var(--sombra-tarjeta);
+  transform: translateY(-2px);
+}
+.retrato {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--rayado);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 10px 12px;
+}
+.retrato:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: -4px;
+}
+.retrato img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ini {
+  font: 500 30px/1 var(--f-serif);
+  color: var(--azul);
+}
+.pista {
+  font: 500 10px var(--f-mono);
+  color: var(--pista);
+}
+.info {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nombre {
+  margin: 0;
+  font: 600 17px/1.2 var(--f-serif);
+  color: var(--texto);
+  text-wrap: balance;
+}
+
+/* ---------- Ficha ampliada (diálogo nativo, components/landing/FichaIntegrante) ---------- */
+.ficha {
+  width: min(860px, calc(100% - 2rem));
+  max-width: none;
+  max-height: calc(100% - 2rem);
+  margin: auto;
+  padding: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--blanco);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-tarjeta);
+}
+.ficha::backdrop {
+  background: rgba(12, 39, 66, 0.45);
+}
+.ficha[open] {
+  animation: entrar 0.12s ease-out;
+}
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+.cerrar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  border: 1px solid var(--borde-campo);
+  border-radius: var(--radio-s);
+  background: var(--blanco);
+  font: 400 22px/1 var(--f-serif);
+  color: var(--azul);
+}
+.cerrar:hover {
+  background: var(--hover);
+}
+
+.cuerpo {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-top: 16px;
+}
+.cuerpo[hidden] {
+  display: none;
+}
+.fotoFicha {
+  position: relative;
+  width: 180px;
+  aspect-ratio: 4 / 5;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--radio-s);
+  background: var(--rayado);
+  display: flex;
+  align-items: flex-end;
+  padding: 10px 12px;
+}
+.fotoFicha img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.texto {
+  min-width: 0;
+}
+.cab {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-bottom: 2px solid var(--azul);
+  padding-bottom: 10px;
+  margin-right: 40px;
+}
+.cab p {
+  margin: 0;
+}
+.fichaNombre {
+  margin: 0;
+  font: 500 28px/1.1 var(--f-serif);
+  color: var(--azul);
+}
+.bio {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--texto);
+  text-wrap: pretty;
+}
+.bio p {
+  margin: 0 0 0.8em;
+}
+.bio p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+  .ficha {
+    padding: 52px 16px 18px;
+  }
+  .cuerpo:not([hidden]) {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    column-gap: 14px;
+    align-items: end;
+    margin-top: 0;
+  }
+  .texto {
+    display: contents;
+  }
+  .fotoFicha {
+    width: 84px;
+    padding: 6px;
+  }
+  .fotoFicha .ini {
+    font-size: 24px;
+  }
+  .cab {
+    margin-right: 0;
+  }
+  .fichaNombre {
+    font-size: 22px;
+  }
+  .bio {
+    grid-column: 1 / -1;
+    font-size: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta,
+  .ficha[open] {
+    transition: none;
+    animation: none;
+  }
+  .tarjeta:hover {
+    transform: none;
+  }
+}

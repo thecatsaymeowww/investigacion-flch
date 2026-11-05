@@ -1,0 +1,140 @@
+.colaborar {
+  padding: 64px 0 72px;
+  scroll-margin-top: 60px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 48px;
+}
+.texto {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.h2 {
+  margin: 0;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: clamp(36px, 4.4vw, 60px);
+  line-height: 1;
+  text-wrap: balance;
+}
+.p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.firma {
+  border-top: 1px solid var(--tinta);
+  padding-top: 14px;
+  font-family: var(--f-etiqueta);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--texto-2);
+}
+.caja {
+  border: 1px solid var(--tinta);
+  background: var(--papel-claro);
+  padding: 32px;
+}
+.gracias {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px 0;
+}
+.gracias h3 {
+  margin: 0;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.1;
+}
+.gracias p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 20px;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--f-etiqueta);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.tipos {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  gap: 10px;
+}
+.tipos legend {
+  padding: 0;
+  margin-bottom: 10px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+}
+.campo input,
+.campo textarea {
+  font-family: var(--f-texto);
+  font-size: 17px;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+  padding: 10px 0;
+  border: 0;
+  border-bottom: 1px solid var(--tinta);
+  background: transparent;
+  color: var(--tinta);
+}
+.campo textarea {
+  line-height: 1.5;
+  padding: 10px 12px;
+  border: 1px solid var(--tinta);
+  resize: vertical;
+}
+.error {
+  margin: 0;
+  font-style: italic;
+  color: #8a1c1c;
+}
+.campo [aria-invalid='true'] {
+  border-color: #8a1c1c;
+}
+/* Campo trampa (subfase 4c): fuera de la vista, del foco y de los lectores de pantalla. */
+.trampa {
+  display: none;
+}
+/* Error de un campo (subfase 4a): el texto del aviso general, sin el estilo de etiqueta del campo. */
+.errorCampo {
+  font-family: var(--f-texto);
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #8a1c1c;
+}

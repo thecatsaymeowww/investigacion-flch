@@ -1,0 +1,198 @@
+/* Colaborar (tema FLCH): mismas clases que components/landing/Colaborar.module.css, otra presentación. */
+.colaborar {
+  padding: 56px 0 72px;
+  scroll-margin-top: var(--nav-alto);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 40px;
+}
+.texto {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.etiqueta {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.h2 {
+  margin: 0;
+  font: 500 clamp(32px, 4vw, 48px)/1.05 var(--f-serif);
+  color: var(--azul);
+  text-wrap: balance;
+}
+.p {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+.firma {
+  border-top: 1px solid var(--borde);
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--texto-2);
+}
+.firmaGrupo {
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.caja {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 28px;
+}
+@media (max-width: 600px) {
+  .caja {
+    padding: 20px;
+  }
+}
+
+.gracias {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 0;
+}
+.gracias h3 {
+  margin: 0;
+  font: 500 30px/1.1 var(--f-serif);
+  color: var(--azul);
+}
+.gracias p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.otra {
+  align-self: flex-start;
+  margin-top: 6px;
+  height: 44px;
+  padding: 0 18px;
+  cursor: pointer;
+  border: 1px solid var(--borde-campo);
+  border-radius: var(--radio-s);
+  background: var(--blanco);
+  font: 600 14px var(--f-sans);
+  color: var(--azul);
+}
+.otra:hover {
+  background: var(--hover);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 16px;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.campo input,
+.campo textarea {
+  height: 46px;
+  padding: 0 12px;
+  border: 1px solid var(--borde-campo);
+  border-radius: var(--radio-s);
+  background: var(--blanco);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--texto);
+}
+.campo textarea {
+  height: auto;
+  padding: 10px 12px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.campo [aria-invalid='true'] {
+  border-color: #a32020;
+}
+
+.tipos {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+  min-width: 0;
+}
+.tipos legend {
+  padding: 0;
+  margin-bottom: 8px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  border: 1px solid var(--borde-campo);
+  background: var(--blanco);
+  color: var(--texto);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: 500 13px var(--f-sans);
+  cursor: pointer;
+}
+.chip:hover {
+  background: var(--hover);
+}
+.chip[aria-pressed='true'] {
+  background: var(--azul);
+  color: var(--blanco);
+  border-color: var(--azul);
+}
+
+.error {
+  margin: 0;
+  font-size: 14px;
+  color: #a32020;
+}
+/* Campo trampa (subfase 4c): fuera de la vista, del foco y de los lectores de pantalla. */
+.trampa {
+  display: none;
+}
+/* Error de un campo (subfase 4a). */
+.errorCampo {
+  font-size: 13px;
+  font-weight: 400;
+  color: #a32020;
+}
+.enviar {
+  align-self: flex-start;
+  height: 46px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: var(--radio-s);
+  cursor: pointer;
+  background: var(--azul);
+  color: var(--blanco);
+  font: 600 14px var(--f-sans);
+}
+.enviar:hover {
+  background: var(--azul-osc);
+}
+.enviar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -1,0 +1,163 @@
+/* Archivo de publicaciones (tema FLCH): mismas clases que components/archivo/Archivo.module.css más las que allí son globales. */
+.filtros {
+  position: sticky;
+  top: var(--nav-alto);
+  z-index: 5;
+  background: var(--fondo);
+  padding: 18px 0 14px;
+  border-bottom: 1px solid var(--borde);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+.buscar {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.buscar input {
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--borde-campo);
+  border-radius: var(--radio-s);
+  background: var(--blanco);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--texto);
+  min-width: 0;
+}
+.vistas {
+  display: flex;
+  border: 1px solid var(--borde-campo);
+  border-radius: var(--radio-s);
+  overflow: hidden;
+  background: var(--blanco);
+}
+.vistas button {
+  border: 0;
+  padding: 0 16px;
+  height: 44px;
+  cursor: pointer;
+  background: var(--blanco);
+  color: var(--azul);
+  font: 600 13px var(--f-sans);
+}
+.vistas button:focus-visible {
+  outline-offset: -3px;
+}
+.vistas button[aria-pressed='true'] {
+  background: var(--azul);
+  color: var(--blanco);
+}
+.grupo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.etiquetaGrupo {
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.chip {
+  border: 1px solid var(--borde-campo);
+  background: var(--blanco);
+  color: var(--texto);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: 500 13px var(--f-sans);
+  cursor: pointer;
+}
+.chip:hover {
+  background: var(--hover);
+}
+.chip[aria-pressed='true'] {
+  background: var(--azul);
+  color: var(--blanco);
+  border-color: var(--azul);
+}
+.recuento {
+  font-size: 13.5px;
+  color: var(--texto-2);
+}
+
+.vacio {
+  padding: 48px 0;
+  text-align: center;
+  font-size: 15px;
+  color: var(--texto-2);
+}
+.grid {
+  padding-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: 28px 20px;
+}
+@media (max-width: 519px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+  }
+}
+.lista {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.filaItem {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: baseline;
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 16px 18px;
+}
+.anio {
+  font: 500 24px var(--f-serif);
+  color: var(--azul);
+}
+.meta {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.titulo {
+  margin: 0;
+  font: 600 19px/1.2 var(--f-serif);
+  color: var(--texto);
+}
+.autor {
+  font-size: 13.5px;
+  color: var(--texto-2);
+}
+.enlace {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+@media (max-width: 519px) {
+  .filaItem {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+  .filaItem > :last-child {
+    grid-column: 2;
+    align-items: flex-start !important;
+  }
+}

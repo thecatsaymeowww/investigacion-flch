@@ -1,0 +1,108 @@
+.cabecera {
+  background: var(--azul);
+  color: var(--blanco);
+}
+.inner {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 16px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  color: var(--blanco);
+}
+.marca:hover {
+  color: var(--blanco);
+  text-decoration: none;
+}
+.escudo {
+  width: 42px;
+  height: 48px;
+  flex: none;
+  border: 1px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 9px var(--f-mono);
+  color: rgba(255, 255, 255, 0.7);
+}
+.textos {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+}
+.facultad {
+  font: 600 18px var(--f-serif);
+}
+.universidad {
+  font-size: 11px;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--sobre-azul-2);
+}
+
+/* Botón en relieve (cambio pedido sobre la referencia, que lo tenía dorado): sin borde, un azul más oscuro
+   que la franja, sombra inferior y un brillo fino arriba. Al pasar el ratón: pequeño zoom y sombra al 90 % de 2 px. */
+.flch {
+  margin-left: auto;
+  flex: none;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radio-s);
+  background: var(--azul-osc);
+  color: var(--blanco);
+  font: 600 14px var(--f-sans);
+  letter-spacing: 1.5px;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.flch:hover,
+.flch:focus-visible {
+  color: var(--blanco);
+  text-decoration: none;
+  transform: scale(1.06);
+  box-shadow:
+    0 2px 2px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 480px) {
+  .inner {
+    gap: 14px;
+  }
+  .facultad {
+    font-size: 16px;
+  }
+  .universidad {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  .flch {
+    height: 40px;
+    padding: 0 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flch {
+    transition: none;
+  }
+  .flch:hover,
+  .flch:focus-visible {
+    transform: none;
+  }
+}

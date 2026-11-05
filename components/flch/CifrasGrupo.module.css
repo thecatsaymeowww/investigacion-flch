@@ -1,0 +1,32 @@
+.cifras {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+}
+/* En la referencia el número va primero y la etiqueta debajo: el orden visual se invierte sin cambiar el de lectura (dt antes que dd). */
+.cifra {
+  padding: 24px 20px 4px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.valor {
+  order: -1;
+  margin: 0;
+  font: 500 clamp(48px, 5vw, 64px)/1 var(--f-serif);
+  color: var(--azul);
+}
+.etiqueta {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.nota {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--texto-2);
+  text-wrap: pretty;
+}

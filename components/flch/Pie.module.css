@@ -1,0 +1,44 @@
+.pie {
+  background: var(--azul-osc);
+  color: var(--sobre-azul-2);
+}
+.inner {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 40px var(--gutter);
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.facultad {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 380px;
+}
+.nombre {
+  font: 600 18px var(--f-serif);
+  color: var(--blanco);
+}
+.contacto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.titulo {
+  color: var(--blanco);
+  font-weight: 600;
+}
+.enlace,
+.enlace:hover {
+  color: var(--oro-claro);
+}
+.legal {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px var(--gutter);
+  text-align: center;
+  font-size: 12px;
+}

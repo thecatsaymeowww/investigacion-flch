@@ -1,0 +1,20 @@
+[
+  {
+    "id": "GHSA-67mh-4wv8-2f99",
+    "paquete": "esbuild",
+    "severidad": "moderate",
+    "ruta": "@payloadcms/db-postgres > drizzle-kit > @esbuild-kit/esm-loader > @esbuild-kit/core-utils > esbuild",
+    "motivo": "Solo afecta al servidor de desarrollo de esbuild (`esbuild serve`), que el proyecto no usa; drizzle-kit solo aporta su CLI. No ejecutar el CLI de drizzle-kit ni `esbuild serve` en producción.",
+    "revisar": "2026-11-29",
+    "condicion": "o antes si Payload adopta drizzle-kit 1.x"
+  },
+  {
+    "id": "GHSA-gcqx-w48m-w2h4",
+    "paquete": "deepmerge",
+    "severidad": "low",
+    "ruta": "payload > deepmerge",
+    "motivo": "Sin versión corregida. Payload fusiona con deepmerge los datos recibidos; lib/claves-peligrosas.ts rechaza antes las claves __proto__, constructor y prototype en toda escritura, y test:seguridad lo comprueba (sección deepmerge).",
+    "revisar": "2026-11-29",
+    "condicion": "o antes si sale una versión de Payload 3.x que lo corrija"
+  }
+]

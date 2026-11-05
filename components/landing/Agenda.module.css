@@ -1,0 +1,166 @@
+.agenda {
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--tinta);
+}
+.cal {
+  flex: 2 1 560px;
+  min-width: 0;
+  padding: 24px 32px 8px 0;
+}
+.barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.mes {
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1;
+  text-align: center;
+}
+.scroll {
+  overflow-x: auto;
+}
+.grilla {
+  min-width: 560px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-left: 1px solid var(--tinta);
+  border-top: 1px solid var(--tinta);
+}
+.wd {
+  font-family: var(--f-etiqueta);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  padding: 8px;
+  border-right: 1px solid var(--tinta);
+  border-bottom: 1px solid var(--tinta);
+  background: var(--tinta);
+  color: var(--papel);
+}
+.lista {
+  flex: 1 1 280px;
+  min-width: 0;
+  border-left: 1px solid var(--tinta);
+  padding: 24px 0 8px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.listaCab {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.todo {
+  font-size: 10.5px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--tinta);
+  padding: 0;
+  cursor: pointer;
+  color: var(--tinta);
+}
+
+.dia {
+  all: unset;
+  box-sizing: border-box;
+  min-height: 96px;
+  padding: 6px 7px;
+  border-right: 1px solid var(--tinta);
+  border-bottom: 1px solid var(--tinta);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: default;
+  background: transparent;
+  min-width: 0;
+}
+.conEv {
+  cursor: pointer;
+}
+.conEv:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: -3px;
+}
+.fuera {
+  opacity: 0.35;
+}
+.hoy {
+  background: var(--papel-claro);
+}
+.sel {
+  background: var(--dia-sel);
+}
+.num {
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--tinta);
+}
+.hoy .num {
+  color: var(--azul);
+}
+.pill {
+  font-family: var(--f-etiqueta);
+  font-size: 10.5px;
+  line-height: 1.25;
+  padding: 3px 5px;
+  background: var(--azul);
+  color: var(--papel);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ev {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--divisor);
+}
+.evFecha {
+  text-align: center;
+  border: 1px solid var(--tinta);
+  padding: 6px 0;
+  align-self: start;
+}
+.evDia {
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1;
+}
+.evMon,
+.evTipo {
+  font-family: var(--f-etiqueta);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.evMon {
+  font-size: 9.5px;
+  margin-top: 3px;
+}
+.evTipo {
+  font-size: 10.5px;
+  color: var(--azul);
+}
+.evTit {
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.15;
+}
+.evLugar {
+  font-size: 14px;
+  color: var(--texto-2);
+}

@@ -1,0 +1,13 @@
+# Texto: el repositorio guarda siempre LF, sea cual sea core.autocrlf en cada equipo.
+* text=auto
+# Binarios: sin conversión de finales de línea ni diff de texto.
+*.woff2 binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+# Los .sql se copian al contenedor de Postgres (Linux) y los ejecuta psql, incluidos sus metacomandos
+# (\if, \set, \echo): se extraen siempre con LF, aunque core.autocrlf=true.
+*.sql text eol=lf
+migrations/*.ts -whitespace
+app/(sitio)/fuentes/**/OFL.txt -whitespace

@@ -1,0 +1,50 @@
+.aliados {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--tinta);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
+.aliados li {
+  border-right: 1px solid var(--divisor);
+  margin-right: 24px;
+}
+.aliado {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  height: 100%;
+  padding: 28px 24px 8px 0;
+  color: var(--tinta);
+  text-decoration: none;
+}
+.aliado img {
+  max-height: 64px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(1);
+}
+.nombre {
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.ir {
+  font-family: var(--f-etiqueta);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--azul);
+}
+a.aliado:hover .nombre {
+  color: var(--azul);
+}
+a.aliado:hover .ir {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

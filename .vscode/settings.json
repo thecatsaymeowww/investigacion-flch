@@ -1,0 +1,25 @@
+{
+  // Console Ninja inyecta código en node_modules (next, webpack…) de las herramientas que detecta; en este
+  // proyecto modificó archivos de next. Se desactiva su activación automática solo para este espacio de trabajo.
+  "console-ninja.toolsToEnableSupportAutomaticallyFor": {
+    "vite": false,
+    "angular": false,
+    "jest": false,
+    "webpack": false,
+    "next.js": false,
+    "nest.js": false,
+    "cypress": false,
+    "http-server": false,
+    "serve": false,
+    "live-server": false,
+    "nuxt": false,
+    "remix": false,
+    "qwik": false,
+    "hydrogen": false,
+    "serverless": false,
+    "astro": false,
+    "react-native": false,
+    "live-server-extension": false,
+    "live-preview-extension": false
+  }
+}

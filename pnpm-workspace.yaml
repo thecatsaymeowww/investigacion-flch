@@ -1,0 +1,19 @@
+packages:
+  - '.'
+
+# pnpm 11 bloquea los scripts de instalación hasta decidir. esbuild y sharp traen
+# su binario como dependencia opcional por plataforma: su postinstall no hace falta.
+allowBuilds:
+  esbuild: false
+  sharp: false
+  unrs-resolver: true
+
+# Overrides acotados por padre directo (avisos de pnpm audit del 29-10-2026). Revisar al actualizar Payload.
+overrides:
+  'payload>undici': 7.30.1
+  'monaco-editor>dompurify': 3.4.17
+  'ajv>fast-uri': 3.1.9
+  # Versión mayor (en evaluación): GHSA-c8p4-j97h-3vg8 y GHSA-834v-8h66-3h79. Lexical 0.53 ya exige ^21.0.4.
+  '@lexical/headless>happy-dom': 21.0.4
+  # Versión mayor (en evaluación): GHSA-x8rm-f576-gq67. Ninguna versión de Payload 3 la incluye todavía.
+  '@payloadcms/graphql>graphql-scalars': 2.0.1

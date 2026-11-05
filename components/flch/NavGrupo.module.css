@@ -1,0 +1,94 @@
+/* Fija mientras dure la página: su contenedor es .tema-flch, que abarca toda la altura (ver la nota de la referencia). */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--blanco);
+  border-bottom: 1px solid var(--borde);
+  box-shadow: 0 1px 0 rgba(20, 59, 99, 0.04);
+}
+.inner {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: var(--nav-alto);
+}
+.volver {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-2);
+}
+.volver:hover {
+  color: var(--azul);
+  text-decoration: none;
+}
+.sep {
+  width: 1px;
+  height: 24px;
+  background: var(--borde);
+  flex: none;
+}
+.sigla {
+  flex: none;
+  font: 600 19px var(--f-serif);
+  color: var(--azul);
+}
+.sigla:hover {
+  text-decoration: none;
+}
+.enlaces {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px 2px;
+}
+.enlaces::-webkit-scrollbar {
+  display: none;
+}
+.enlace {
+  flex: none;
+  padding: 8px 10px;
+  border-radius: var(--radio-s);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--texto);
+  white-space: nowrap;
+}
+.enlace:hover {
+  background: var(--hover);
+  color: var(--azul);
+  text-decoration: none;
+}
+.cta {
+  flex: none;
+  margin-left: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radio-s);
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--azul);
+  color: var(--blanco);
+  white-space: nowrap;
+}
+.cta:hover {
+  background: var(--azul-osc);
+  color: var(--blanco);
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .inner {
+    gap: 12px;
+  }
+}

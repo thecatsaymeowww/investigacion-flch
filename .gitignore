@@ -1,0 +1,59 @@
+node_modules/
+.next/
+next-env.d.ts
+*.tsbuildinfo
+# secretos y credenciales locales
+.env
+.env.*
+!.env.example
+# archivos subidos al CMS (se respaldan aparte, no van al repo)
+media/
+# contenido real de Prensa y Literatura (datos personales e imágenes de personas): no se versiona (README, «Contenido real»)
+scripts/semilla/prensa-y-literatura/
+# respaldos: se guardan FUERA del repositorio (docs/BASE-DE-DATOS.md). Esto es solo una red de seguridad;
+# los .sql del código (deploy/postgres/*.sql) no se ignoran.
+*.dump
+*.pgdump
+*.backup
+*.bak
+*.sql.gz
+*.sql.bz2
+*.sql.xz
+*.sql.zst
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+respaldo*/
+respaldos/
+backup*/
+backups/
+respaldo*.sql
+backup*.sql
+# compilaciones y salidas generadas
+out/
+dist/
+build/
+coverage/
+# registros, cachés y temporales
+*.log
+logs/
+.eslintcache
+.cache/
+tmp/
+temp/
+*.tmp
+# credenciales y bases de datos locales
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+# informes generados (Lighthouse y similares) y capturas sueltas que no son del producto
+.lighthouseci/
+lighthouse*.json
+lighthouse*.html
+/visual.png

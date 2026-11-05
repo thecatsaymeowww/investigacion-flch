@@ -1,0 +1,298 @@
+.intro {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 32px;
+  margin-bottom: 36px;
+  align-items: end;
+}
+.intro p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: 36px 28px;
+}
+.miembro {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.retrato {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--tinta);
+  position: relative;
+  overflow: hidden;
+  background: repeating-linear-gradient(135deg, #e6e1d6 0 7px, #ece8df 7px 14px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 10px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.retrato:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0 var(--tinta);
+}
+.retrato:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 3px;
+}
+.retrato img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ini {
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--azul);
+}
+.pista {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  color: var(--texto-ph);
+}
+.info {
+  border-top: 1px solid var(--tinta);
+  padding-top: 10px;
+}
+.num {
+  font-family: var(--f-etiqueta);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--azul);
+}
+.nombre {
+  margin: 6px 0 0;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.rol {
+  margin: 6px 0 0;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--texto-2);
+}
+
+/* ---------- Vista ampliada ---------- */
+.ficha {
+  width: min(900px, calc(100% - 2rem));
+  max-width: none;
+  height: 410px;
+  max-height: calc(100% - 2rem);
+  margin: auto;
+  padding: 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--papel-claro);
+  color: var(--tinta);
+  border: 1px solid var(--tinta);
+  box-shadow: 6px 6px 0 var(--tinta);
+}
+.ficha::backdrop {
+  background: rgba(22, 22, 22, 0.35);
+  backdrop-filter: blur(2px);
+}
+.ficha[open] {
+  animation: ficha-entrar 0.12s ease-out;
+}
+.ficha[open]::backdrop {
+  animation: ficha-velo 0.12s ease-out;
+}
+@keyframes ficha-entrar {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+@keyframes ficha-velo {
+  from {
+    opacity: 0;
+  }
+}
+
+.cerrar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid var(--tinta);
+  cursor: pointer;
+  font-family: var(--f-titular);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--tinta);
+}
+.cerrar:hover {
+  background: var(--tinta);
+  color: var(--papel);
+}
+.cerrar:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}
+
+.cuerpo {
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.cuerpo[hidden] {
+  display: none;
+}
+.foto {
+  position: relative;
+  width: 182px;
+  height: 242px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid var(--tinta);
+  background: var(--rayado);
+  display: flex;
+  align-items: flex-end;
+  padding: 10px;
+}
+.foto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.texto {
+  min-width: 0;
+}
+.cab {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid var(--tinta);
+  padding-bottom: 10px;
+}
+.fichaNombre {
+  margin: 0;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.1;
+}
+.fichaRol {
+  margin: 0;
+  font-family: var(--f-etiqueta);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--azul);
+}
+.bio {
+  margin: 16px 16px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--texto-2);
+  text-wrap: pretty;
+}
+.bio p {
+  margin: 0 0 0.8em;
+}
+.bio p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 600px) {
+  .grilla {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 16px;
+  }
+  .retrato {
+    padding: 8px;
+  }
+  .ini {
+    font-size: 28px;
+  }
+  .nombre {
+    font-size: 17px;
+  }
+  .rol {
+    font-size: 14px;
+  }
+
+  /* Ficha compacta: foto pequeña junto al nombre y biografía a todo el ancho debajo.
+     Solo se desplaza el contenido, así la × queda siempre a la vista.
+     fit-content: con inset 0 del dialog modal, "auto" lo estiraría a toda la pantalla. */
+  .ficha {
+    height: fit-content;
+    max-height: calc(100% - 2rem);
+    padding: 44px 0 0;
+    overflow: hidden;
+  }
+  .ficha[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .cuerpo:not([hidden]) {
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    column-gap: 14px;
+    align-items: end;
+    margin-top: 0;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 16px 18px;
+  }
+  .texto {
+    display: contents;
+  }
+  .foto {
+    width: 84px;
+    height: 112px;
+    padding: 6px;
+  }
+  .foto .ini {
+    font-size: 24px;
+  }
+  .cab {
+    gap: 6px;
+  }
+  .fichaNombre {
+    font-size: 20px;
+  }
+  .bio {
+    grid-column: 1 / -1;
+    margin: 14px 0 0;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retrato,
+  .ficha[open],
+  .ficha[open]::backdrop {
+    transition: none;
+    animation: none;
+  }
+}

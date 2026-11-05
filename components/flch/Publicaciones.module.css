@@ -1,0 +1,99 @@
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: 20px;
+}
+@media (max-width: 519px) {
+  .grilla {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+  }
+}
+
+.pub {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.portada {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radio-s);
+  background: var(--rayado);
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra-portada);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+}
+.portada > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.meta {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  align-items: flex-start;
+}
+.tipo,
+.codigo {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--blanco);
+  background: var(--azul);
+  padding: 3px 7px;
+  border-radius: 3px;
+}
+.codigo {
+  background: var(--blanco);
+  color: var(--azul);
+}
+.pista {
+  position: relative;
+  align-self: center;
+  font: 500 10.5px var(--f-mono);
+  color: var(--pista);
+  background: #f6f7f9;
+  padding: 3px 7px;
+}
+.anio {
+  position: relative;
+  align-self: flex-start;
+  font: 500 20px var(--f-serif);
+  color: var(--azul);
+}
+.conImagen .anio {
+  background: var(--azul);
+  color: var(--blanco);
+  padding: 1px 7px;
+  border-radius: 3px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.titulo {
+  margin: 0;
+  font: 600 18px/1.2 var(--f-serif);
+  color: var(--texto);
+  text-wrap: balance;
+}
+.autor {
+  font-size: 13.5px;
+  color: var(--texto-2);
+}
+.enlace {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}

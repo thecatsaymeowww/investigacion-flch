@@ -1,0 +1,57 @@
+/* Cabecera azul de las páginas interiores (archivo, 404): versión compacta del hero del directorio. */
+.cab {
+  background: var(--azul);
+  color: var(--blanco);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.inner {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 36px var(--gutter) 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.kicker {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--oro-claro);
+}
+.h1 {
+  margin: 0;
+  font: 500 clamp(38px, 6vw, 68px)/1.02 var(--f-serif);
+  letter-spacing: -0.5px;
+  text-wrap: balance;
+}
+.texto {
+  margin: 0;
+  max-width: 620px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--sobre-azul);
+  text-wrap: pretty;
+}
+.acciones {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+}
+.oro {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  padding: 0 20px;
+  border-radius: var(--radio-s);
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--oro);
+  color: var(--azul-osc);
+}
+.oro:hover {
+  background: var(--oro-claro);
+  color: var(--azul-osc);
+  text-decoration: none;
+}

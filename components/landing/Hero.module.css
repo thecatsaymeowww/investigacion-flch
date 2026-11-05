@@ -1,0 +1,177 @@
+.hero {
+  padding-top: 28px;
+  scroll-margin-top: 60px;
+}
+.fecha {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-family: var(--f-etiqueta);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--tinta);
+}
+@media (max-width: 600px) {
+  .dia,
+  .grupo {
+    display: none;
+  }
+  /* Fecha y edición en una sola línea: el tamaño escala con el ancho de pantalla */
+  .fecha {
+    flex-wrap: nowrap;
+    gap: 8px;
+    font-size: clamp(7.5px, 2.2vw, 11px);
+    letter-spacing: 0.04em;
+  }
+  .fecha > span {
+    white-space: nowrap;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+.cabecera {
+  text-align: center;
+  padding: 22px 0 14px;
+}
+.h1 {
+  margin: 0;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: clamp(50px, 10vw, 138px);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+.fileteDoble {
+  border-top: 3px solid var(--tinta);
+  border-bottom: 1px solid var(--tinta);
+  height: 7px;
+}
+.lema {
+  margin: 0;
+  padding: 10px 0;
+  text-align: center;
+  font-style: italic;
+  font-size: 17px;
+  border-bottom: 1px solid var(--tinta);
+}
+.cuerpo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  padding: 36px 0 48px;
+  border-bottom: 3px double var(--tinta);
+}
+.editorial {
+  padding-right: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.titular {
+  margin: 0;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+/* Efecto máquina de escribir (clases globales: las manipula el script) */
+.titular {
+  position: relative;
+}
+.titular :global(.tw__capa) {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+:global(.tw-on) .titular :global(.tw__fuente) {
+  color: transparent;
+}
+.titular :global(.tw__resto) {
+  color: transparent;
+}
+/* El cursor cuelga a la derecha de la última letra sin ocupar espacio */
+.titular :global(.tw__ultima) {
+  position: relative;
+}
+.titular :global(.tw__cursor) {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin-left: 0.04em;
+  font-weight: 400;
+  color: var(--azul);
+  animation: tw-parpadeo 1s steps(1) infinite;
+}
+@keyframes tw-parpadeo {
+  50% {
+    opacity: 0;
+  }
+}
+:global(.tw-on) .texto,
+:global(.tw-on) .botones {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s ease-out;
+}
+:global(.tw-on.tw-fin) .texto,
+:global(.tw-on.tw-fin) .botones {
+  opacity: 1;
+  transform: none;
+}
+:global(.tw-on.tw-fin) .botones {
+  transition-delay: 0.12s;
+}
+
+.texto {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+/* Letra capital de 3 líneas. Respaldo con float (Firefox): 3 líneas × 1.6 × 18px ≈ 86px */
+.texto::first-letter {
+  float: left;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 100px;
+  line-height: 0.86;
+  margin: 4px 12px 0 0;
+  color: var(--azul);
+}
+@supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
+  .texto::first-letter {
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0 0.3em 0 0;
+    -webkit-initial-letter: 3;
+    initial-letter: 3;
+  }
+}
+.botones {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+}
+.foto {
+  margin: 0;
+  border-left: 1px solid var(--tinta);
+  padding-left: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.foto figcaption {
+  font-family: var(--f-etiqueta);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--texto-2);
+}

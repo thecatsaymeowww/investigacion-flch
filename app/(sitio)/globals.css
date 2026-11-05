@@ -1,0 +1,446 @@
+/* ==========================================================
+   Base común a los dos temas del sitio
+   ========================================================== */
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+body {
+  margin: 0;
+  background: #f6f5f2;
+  -webkit-font-smoothing: antialiased;
+}
+body:has(.tema-prensa) {
+  background: #f3f0e9;
+}
+input,
+textarea,
+button {
+  font: inherit;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================
+   Tema FLCH (Plantilla Grupo y directorio de Claude Design)
+   Los componentes usan sus módulos en components/flch/.
+   ========================================================== */
+.tema-flch {
+  --azul: #143b63;
+  --azul-osc: #0c2742;
+  --oro: #d9a53a;
+  --oro-claro: #e8c37a;
+  /* Ocre de la referencia (#9a6b12) oscurecido para AA sobre el fondo y la crema (4,29 → 5,12). */
+  --ocre: #8a6010;
+  --fondo: #f6f5f2;
+  --blanco: #fff;
+  --texto: #15202e;
+  --texto-2: #5a6472;
+  --borde: #e2dfd8;
+  --borde-campo: #d6d2c9;
+  --borde-suave: #efece6;
+  --hover: #f1efe9;
+  --crema: #fbf7ee;
+  --crema-borde: #ecdcb5;
+  --crema-hover: #f5ecd8;
+  --sobre-azul: #dfe6ef;
+  --sobre-azul-2: #c9d4e2;
+  --pista: #6b7686;
+  --rayado: repeating-linear-gradient(135deg, #eef1f5 0 8px, #e5e9ef 8px 16px);
+  --rayado-azul: repeating-linear-gradient(135deg, #1d4774 0 8px, #1a426d 8px 16px);
+
+  --f-serif: var(--fuente-newsreader), Georgia, serif;
+  --f-sans: var(--fuente-etiqueta), system-ui, sans-serif;
+  --f-mono: ui-monospace, Menlo, monospace;
+
+  --ancho: 1240px;
+  --gutter: 24px;
+  --nav-alto: 56px;
+  --radio: 8px;
+  --radio-s: 6px;
+  --sombra-tarjeta: 0 10px 28px rgba(20, 59, 99, 0.14);
+  --sombra-portada: 0 10px 24px rgba(20, 59, 99, 0.12);
+
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: var(--f-sans);
+}
+@media (max-width: 600px) {
+  .tema-flch {
+    --gutter: 16px;
+  }
+}
+:where(.tema-flch) a {
+  color: var(--azul);
+  text-decoration: none;
+}
+:where(.tema-flch) a:hover {
+  color: var(--azul-osc);
+  text-decoration: underline;
+}
+/* Foco: azul sobre fondos claros; las zonas azules (cabecera, hero, pie) lo cambian a oro con .oscuro. */
+:where(.tema-flch) :focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}
+:where(.tema-flch .oscuro) :focus-visible {
+  outline-color: var(--oro);
+}
+:where(.tema-flch) input::placeholder,
+:where(.tema-flch) textarea::placeholder {
+  color: var(--pista);
+}
+:where(.tema-flch) input:focus,
+:where(.tema-flch) textarea:focus {
+  outline: none;
+  border-color: var(--azul);
+}
+
+/* ==========================================================
+   Tema Prensa y Literatura — tokens y estilos base
+   Estética de periódico: sin border-radius, filetes de tinta.
+   Solo lo usa la landing (y el archivo) de Prensa y Literatura.
+   ========================================================== */
+.tema-prensa {
+  --papel: #f3f0e9;
+  --papel-claro: #f7f5f0;
+  --dia-sel: #e2ddd1;
+  --tinta: #161616;
+  --azul: #1d2b4f;
+  --texto-2: #4a463f;
+  --texto-ph: #5a554b;
+  --footer-2: #d8d4ca;
+  --divisor: rgba(22, 22, 22, 0.25);
+  --rayado: repeating-linear-gradient(135deg, #e6e1d6 0 8px, #ece8df 8px 16px);
+
+  --f-titular: var(--fuente-titular), 'Old Standard TT', serif;
+  --f-texto: var(--fuente-texto), 'Source Serif 4', Georgia, serif;
+  --f-etiqueta: var(--fuente-etiqueta), 'Public Sans', sans-serif;
+  --f-gotica: 'UnifrakturMaguntia', serif;
+  --f-mono: ui-monospace, Menlo, monospace;
+
+  --ancho: 1240px;
+  --gutter: 32px;
+
+  position: relative;
+  min-height: 100vh;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--f-texto);
+}
+@media (max-width: 600px) {
+  .tema-prensa {
+    --gutter: 16px;
+  }
+}
+/* :where() mantiene la especificidad de los selectores de elemento originales (a, a:hover, input:focus). */
+:where(.tema-prensa) a {
+  color: var(--azul);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+:where(.tema-prensa) a:hover {
+  color: var(--tinta);
+}
+:where(.tema-prensa) input:focus,
+:where(.tema-prensa) textarea:focus {
+  outline: none;
+  border-color: var(--azul) !important;
+  background: #fff !important;
+}
+
+/* Textura de papel */
+.grano {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: radial-gradient(rgba(60, 50, 30, 0.18) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+.contenedor {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* ---------- Tipografía utilitaria ---------- */
+.etiqueta {
+  font-family: var(--f-etiqueta);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.etiqueta--azul {
+  color: var(--azul);
+}
+.etiqueta--ancha {
+  letter-spacing: 0.16em;
+}
+.bajada {
+  font-family: var(--f-texto);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--texto-2);
+}
+
+/* ---------- Secciones ---------- */
+.seccion {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--tinta);
+  scroll-margin-top: 60px;
+}
+.seccion--doble {
+  border-bottom: 3px double var(--tinta);
+}
+.seccion__cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.h2 {
+  margin: 0;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: clamp(30px, 3.4vw, 44px);
+  line-height: 1;
+}
+
+/* ---------- Placeholder de imagen ---------- */
+.ph {
+  border: 1px solid var(--tinta);
+  background: var(--rayado);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.ph__pista {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--texto-ph);
+  background: var(--papel);
+  padding: 4px 8px;
+}
+.ph > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-block;
+  font-family: var(--f-etiqueta);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+.btn--azul {
+  background: var(--azul);
+  color: var(--papel);
+  padding: 14px 22px;
+  border: 0;
+}
+.btn--azul:hover {
+  background: var(--tinta);
+  color: var(--papel);
+}
+.btn--borde {
+  background: transparent;
+  color: var(--tinta);
+  padding: 13px 22px;
+  border: 1px solid var(--tinta);
+}
+.btn--borde:hover {
+  background: var(--tinta);
+  color: var(--papel);
+}
+.btn--chico {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  padding: 8px 12px;
+}
+
+/* Chips (selección única) */
+.chip {
+  font-family: var(--f-etiqueta);
+  font-size: 13px;
+  padding: 9px 14px;
+  border: 1px solid var(--tinta);
+  cursor: pointer;
+  background: transparent;
+  color: var(--tinta);
+}
+.chip[aria-pressed='true'] {
+  background: var(--azul);
+  color: var(--papel);
+}
+
+/* ---------- Portadas (publicaciones) ---------- */
+.portada {
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--tinta);
+  box-shadow: 6px 6px 0 var(--tinta);
+  background: var(--rayado);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.portada > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.portada__meta {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--f-etiqueta);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--azul);
+}
+.portada__pista {
+  position: relative;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  color: var(--texto-ph);
+  align-self: center;
+  background: var(--papel);
+  padding: 3px 6px;
+}
+.portada__anio {
+  position: relative;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--azul);
+}
+.portada--con-img .portada__meta span,
+.portada--con-img .portada__anio {
+  background: var(--azul);
+  color: var(--papel);
+  padding: 2px 6px;
+  align-self: flex-start;
+}
+
+.pub {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pub__info {
+  border-top: 1px solid var(--tinta);
+  padding-top: 10px;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pub__titulo {
+  margin: 0;
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 1.15;
+}
+.pub__autor {
+  font-size: 15px;
+  font-style: italic;
+  color: var(--texto-2);
+}
+.pub__pdf {
+  font-family: var(--f-etiqueta);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+.pub__pdf[aria-disabled='true'] {
+  color: var(--texto-2);
+  text-decoration: none;
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  background: var(--tinta);
+  color: var(--papel);
+}
+.footer__inner {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 36px var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.footer__logo {
+  font-family: var(--f-titular);
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1;
+}
+.footer__creditos {
+  font-family: var(--f-etiqueta);
+  font-size: 12px;
+  line-height: 1.7;
+  letter-spacing: 0.04em;
+  text-align: right;
+  color: var(--footer-2);
+}
+
+.logo-y {
+  font-style: italic;
+  font-weight: 400;
+}

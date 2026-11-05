@@ -1,0 +1,318 @@
+/* Directorio v2 (tema FLCH). La barra de búsqueda queda fija al desplazarse, como en la referencia. */
+.filtros {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--fondo);
+  padding: 18px 0 14px;
+  border-bottom: 1px solid var(--borde);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.filaFiltros {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.buscar {
+  flex: 1 1 260px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 14px;
+  background: var(--blanco);
+  border: 1px solid var(--borde-campo);
+  border-radius: var(--radio-s);
+}
+.buscar:focus-within {
+  border-color: var(--azul);
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}
+.lupa {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--azul);
+  border-radius: 50%;
+  flex: none;
+}
+.buscar input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: 15px var(--f-sans);
+  color: var(--texto);
+}
+.buscar input:focus {
+  box-shadow: none;
+}
+
+/* Vista: Por escuela / A–Z */
+.vistas {
+  display: flex;
+  border: 1px solid var(--borde-campo);
+  border-radius: var(--radio-s);
+  overflow: hidden;
+  background: var(--blanco);
+}
+.vistas button {
+  border: 0;
+  padding: 0 16px;
+  height: 44px;
+  cursor: pointer;
+  background: var(--blanco);
+  color: var(--azul);
+  font: 600 13px var(--f-sans);
+}
+.vistas button:focus-visible {
+  outline-offset: -3px;
+}
+.vistas button[aria-pressed='true'] {
+  background: var(--azul);
+  color: var(--blanco);
+}
+
+/* Escuelas: en varias líneas en escritorio; en pantallas menores, una fila con desplazamiento horizontal */
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 2px;
+}
+@media (max-width: 1099px) {
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .chips::-webkit-scrollbar {
+    display: none;
+  }
+}
+.chip {
+  flex: none;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid var(--borde-campo);
+  background: var(--blanco);
+  color: var(--texto);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: 500 13px var(--f-sans);
+}
+.chip:hover {
+  background: var(--hover);
+}
+.chip[aria-pressed='true'] {
+  background: var(--azul);
+  color: var(--blanco);
+  border-color: var(--azul);
+}
+.cuenta {
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+/* Secciones por escuela */
+.secciones {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-top: 8px;
+}
+.seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cabSeccion {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--azul);
+  padding-bottom: 10px;
+}
+.antetitulo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.h2 {
+  margin: 0;
+  font: 500 clamp(24px, 3vw, 32px)/1.1 var(--f-serif);
+  color: var(--azul);
+}
+.cuentaSeccion {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--texto-2);
+}
+.seccion .grilla {
+  padding-top: 0;
+}
+.recuento {
+  margin: 0;
+  padding: 16px 0 6px;
+  font-size: 13.5px;
+  color: var(--texto-2);
+}
+.vacio {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--texto-2);
+  font-size: 15px;
+}
+
+.grilla {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
+  gap: 16px;
+}
+@media (max-width: 1099px) {
+  .grilla {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+  }
+}
+
+.tarjeta {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+.tarjeta:hover {
+  box-shadow: var(--sombra-tarjeta);
+  transform: translateY(-2px);
+}
+.principal {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  color: var(--texto);
+}
+a.principal:hover {
+  color: var(--texto);
+  text-decoration: none;
+}
+a.principal:focus-visible {
+  outline-offset: -3px;
+}
+.foto {
+  aspect-ratio: 16 / 9;
+}
+.cuerpo {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+.sigla {
+  font: 600 24px/1.05 var(--f-serif);
+  color: var(--azul);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.flecha {
+  color: var(--azul);
+  font-size: 18px;
+  flex: none;
+}
+.lema {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--texto-2);
+}
+@media (max-width: 519px) {
+  .sigla {
+    font-size: 17px;
+  }
+  .cuerpo {
+    padding: 12px 12px 14px;
+  }
+}
+
+.subgrupos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sub {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border-top: 1px solid var(--borde-suave);
+  background: var(--crema);
+  color: var(--texto);
+}
+.sub:hover {
+  background: var(--crema-hover);
+  color: var(--texto);
+  text-decoration: none;
+}
+.sub:focus-visible {
+  outline-offset: -3px;
+}
+.subEtiqueta {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.subNombre {
+  font-size: 13.5px;
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+}
+.subFlecha {
+  color: var(--ocre);
+  flex: none;
+}
+@media (max-width: 519px) {
+  .sub {
+    flex-wrap: wrap;
+    gap: 2px 8px;
+    padding: 10px 12px;
+  }
+  .subEtiqueta {
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta {
+    transition: none;
+  }
+  .tarjeta:hover {
+    transform: none;
+  }
+}
