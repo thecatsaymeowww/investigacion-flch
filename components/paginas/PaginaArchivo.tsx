@@ -5,7 +5,7 @@ import s from '@/components/archivo/Archivo.module.css'
 import b from '@/components/flch/base.module.css'
 import { Cabecera } from '@/components/flch/Cabecera'
 import h from '@/components/flch/CabeceraArchivo.module.css'
-import { NavGrupo } from '@/components/flch/NavGrupo'
+import { NavGrupo, seccionesOcultas } from '@/components/flch/NavGrupo'
 import { Pie } from '@/components/flch/Pie'
 import { Footer } from '@/components/landing/Footer'
 import { FranjaInstitucional } from '@/components/landing/FranjaInstitucional'
@@ -13,7 +13,6 @@ import { Nav } from '@/components/landing/Nav'
 import { TemaFlch } from '@/components/temas/TemaFlch'
 import { TemaPrensa } from '@/components/temas/TemaPrensa'
 import { obtenerLanding, type DatosLanding } from '@/lib/cms'
-import { usaTemaPrensa } from '@/lib/temas'
 
 export async function metadatosArchivo(ruta: string): Promise<Metadata> {
   const d = await obtenerLanding(ruta)
@@ -30,11 +29,11 @@ const siglas = (nombre: string) =>
 
 const ordenar = (d: NonNullable<DatosLanding>) => [...d.publicaciones].sort((a, b) => b.anio.localeCompare(a.anio) || b.codigo.localeCompare(a.codigo))
 
-/** Archivo de un grupo o subgrupo, con el tema de su landing. */
+/** Archivo de un grupo o subgrupo, con el tema de su landing (por la relación real: subgrupo → Prensa y Literatura). */
 export async function PaginaArchivo({ ruta }: { ruta: string }) {
   const d = await obtenerLanding(ruta)
   if (!d) notFound()
-  return usaTemaPrensa(d.grupo.ruta) ? <ArchivoPrensa d={d} /> : <ArchivoFlch d={d} />
+  return d.grupo.esSubgrupo ? <ArchivoPrensa d={d} /> : <ArchivoFlch d={d} />
 }
 
 /** Sin referencia propia en Claude Design: cabecera y piezas de la Plantilla Grupo. */
@@ -43,7 +42,7 @@ function ArchivoFlch({ d }: { d: NonNullable<DatosLanding> }) {
   return (
     <TemaFlch>
       <Cabecera />
-      <NavGrupo ruta={d.grupo.ruta} nombre={id.nombre} pagina="archivo" ocultas={d.galeria.length ? [] : ['galeria']} />
+      <NavGrupo ruta={d.grupo.ruta} nombre={id.nombre} pagina="archivo" ocultas={seccionesOcultas(d)} />
       <section className={`oscuro ${h.cab}`}>
         <div className={h.inner}>
           <span className={h.kicker}>Archivo · {id.nombre}</span>

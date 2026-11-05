@@ -2,6 +2,7 @@ import * as migration_20261022_163428_inicial from './20261022_163428_inicial';
 import * as migration_20261030_161656_escuela_grupos from './20261030_161656_escuela_grupos';
 import * as migration_20261103_201313_antispam_4c from './20261103_201313_antispam_4c';
 import * as migration_20261103_215923_imagenes_5b from './20261103_215923_imagenes_5b';
+import * as migration_20261105_213540_grupos_adisco from './20261105_213540_grupos_adisco';
 
 export const migrations = [
   {
@@ -22,6 +23,11 @@ export const migrations = [
   {
     up: migration_20261103_215923_imagenes_5b.up,
     down: migration_20261103_215923_imagenes_5b.down,
-    name: '20261103_215923_imagenes_5b'
+    name: '20261103_215923_imagenes_5b',
+  },
+  {
+    up: migration_20261105_213540_grupos_adisco.up,
+    down: migration_20261105_213540_grupos_adisco.down,
+    name: '20261105_213540_grupos_adisco'
   },
 ];

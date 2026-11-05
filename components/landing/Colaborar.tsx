@@ -17,6 +17,8 @@ type Props = {
   accion: (previo: EstadoEnvio, form: FormData) => Promise<EstadoEnvio>
   /** Solo cambia la presentación: el formulario, sus campos y su envío son los mismos en los dos temas. */
   variante?: 'prensa' | 'flch'
+  /** Plantilla Grupo («Contactos»): coordinación (integrante coordinador) y correo del grupo. Solo en el tema FLCH. */
+  contacto?: { coordinacion: string; correo: string }
 }
 
 const INICIAL: EstadoEnvio = { estado: 'inicial' }
@@ -34,9 +36,13 @@ const CLASES: Record<'prensa' | 'flch', Record<string, string>> = {
   flch: f,
 }
 
-export function Colaborar({ etiqueta, titular, texto, tipos, firma, marca, accion, variante = 'prensa' }: Props) {
+export function Colaborar({ etiqueta, titular, texto, tipos, firma, marca, accion, variante = 'prensa', contacto }: Props) {
   const s = CLASES[variante]
   const prensa = variante === 'prensa'
+  // Textos de cada tema; los de la Plantilla Grupo son los de su referencia (consulta, no propuesta).
+  const t = prensa
+    ? { leyenda: 'Tipo de colaboración', mensaje: 'Describa su propuesta en unas líneas', enviar: 'Enviar propuesta', otra: 'Enviar otra propuesta' }
+    : { leyenda: 'Motivo', mensaje: 'Describa su consulta en unas líneas', enviar: 'Enviar mensaje', otra: 'Enviar otro mensaje' }
   const [estado, enviar, enviando] = useActionState(accion, INICIAL)
   // Tras un error, React restablece el formulario a sus valores por defecto: son los que se enviaron.
   const v = estado.estado === 'error' ? estado.valores : undefined
@@ -73,10 +79,15 @@ export function Colaborar({ etiqueta, titular, texto, tipos, firma, marca, accio
             </div>
           ) : (
             <div className={s.firma}>
-              <span className={f.firmaGrupo}>{firma.grupo}</span>
+              <span className={f.firmaGrupo}>{contacto?.coordinacion ? `Coordinación: ${contacto.coordinacion}` : firma.grupo}</span>
               <span>
                 {firma.escuela && `${firma.escuela} · `}FLCH · {firma.sigla || firma.universidad}
               </span>
+              {contacto?.correo && (
+                <a href={`mailto:${contacto.correo}`} className={f.correo}>
+                  {contacto.correo}
+                </a>
+              )}
             </div>
           )}
         </div>
@@ -95,7 +106,7 @@ export function Colaborar({ etiqueta, titular, texto, tipos, firma, marca, accio
                 style={prensa ? { fontSize: 12, padding: '11px 18px', alignSelf: 'flex-start', marginTop: 8 } : undefined}
                 onClick={() => setDescartado(estado.envio)}
               >
-                Enviar otra propuesta
+                {t.otra}
               </button>
             </div>
           ) : (
@@ -148,7 +159,7 @@ export function Colaborar({ etiqueta, titular, texto, tipos, firma, marca, accio
               </div>
               {/* aria-invalid no se admite en un grupo: aquí solo se enlaza el error. */}
               <fieldset className={`${s.campo} ${s.tipos}`} aria-describedby={errores.tipo ? idError('tipo') : undefined}>
-                <legend>Tipo de colaboración</legend>
+                <legend>{t.leyenda}</legend>
                 <input type="hidden" name="tipo" value={tipo} />
                 <div className={s.chips}>
                   {tipos.map((t) => (
@@ -167,7 +178,7 @@ export function Colaborar({ etiqueta, titular, texto, tipos, firma, marca, accio
                   required
                   maxLength={LIMITES.mensaje.max}
                   rows={5}
-                  placeholder="Describa su propuesta en unas líneas"
+                  placeholder={t.mensaje}
                   defaultValue={v?.mensaje}
                   {...conError('mensaje')}
                 />
@@ -188,7 +199,7 @@ export function Colaborar({ etiqueta, titular, texto, tipos, firma, marca, accio
                 </p>
               )}
               <button type="submit" className={s.enviar} style={prensa ? { padding: '15px 26px', alignSelf: 'flex-start' } : undefined} disabled={enviando}>
-                {enviando ? 'Enviando…' : 'Enviar propuesta'}
+                {enviando ? 'Enviando…' : t.enviar}
               </button>
             </form>
           )}

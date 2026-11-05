@@ -46,6 +46,11 @@
   font-weight: 600;
   color: var(--texto);
 }
+/* Correo de contacto del grupo (Plantilla Grupo, «Contactos») */
+.correo {
+  font-weight: 600;
+  word-break: break-all;
+}
 
 .caja {
   background: var(--blanco);

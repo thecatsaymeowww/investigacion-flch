@@ -1,6 +1,13 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Field } from 'payload'
 import { publicadoOPanel, soloSuperadmin, usuarioDelPanel } from '../../lib/access'
+import { calcularPlantilla, coordinadorUnico, soloEnGrupos } from '../../lib/access/privileged'
 import { hooksEditoriales } from '../hooks'
+
+/** Añade a los hooks editoriales la protección de los campos que solo existen en los grupos (no en subgrupos). */
+const conSoloGrupos = (hooks: CollectionConfig['hooks'], campos: string[]): CollectionConfig['hooks'] => ({
+  ...hooks,
+  beforeValidate: [...(hooks?.beforeValidate ?? []), soloEnGrupos(campos)],
+})
 
 const accesoEditorial: CollectionConfig['access'] = {
   read: publicadoOPanel,
@@ -16,6 +23,24 @@ const GRUPO_PANEL = 'Contenido del grupo'
 const urlValida = (value: unknown) =>
   value == null || value === '' || (typeof value === 'string' && /^https?:\/\/\S+$/.test(value)) || 'Debe empezar por http:// o https://'
 
+/**
+ * Plantilla del grupo dueño del documento («grupo» o «subgrupo»), calculada por su relación `padre` (ver
+ * lib/access/privileged.ts, calcularPlantilla). Virtual: no tiene columna ni se guarda. Solo la usa el panel.
+ */
+const campoPlantilla: Field = {
+  name: 'plantilla',
+  type: 'text',
+  virtual: true,
+  admin: { hidden: true },
+  hooks: { afterRead: [calcularPlantilla] },
+}
+
+/** Los campos propios de los grupos de investigación no se muestran en un subgrupo (Prensa y Literatura). */
+const soloGrupos = (data: Partial<{ plantilla?: string }> | undefined) => data?.plantilla !== 'subgrupo'
+
+/** Campos de la ficha de integrante que solo usan los grupos (estructura de ADISCO, «Miembros»). */
+const CAMPOS_INTEGRANTE_GRUPO = ['tipoInvestigador', 'coordinador', 'vinculo', 'facultad']
+
 export const Integrantes: CollectionConfig = {
   slug: 'integrantes',
   labels: { singular: 'Integrante', plural: 'Integrantes' },
@@ -23,10 +48,45 @@ export const Integrantes: CollectionConfig = {
   defaultSort: 'orden',
   versions: { drafts: true },
   access: accesoEditorial,
-  hooks: hooksEditoriales([{ campo: 'foto', destino: 'media' }]),
+  hooks: conSoloGrupos(hooksEditoriales([{ campo: 'foto', destino: 'media' }]), CAMPOS_INTEGRANTE_GRUPO),
   fields: [
+    campoPlantilla,
     { name: 'nombre', label: 'Nombre completo', type: 'text', required: true },
     { name: 'rol', label: 'Grado o rol', type: 'text', admin: { description: 'Se muestra bajo el nombre. Ej.: Doctor, Magíster, Estudiante.' } },
+    // Cada integrante pertenece a un único grupo (multi-tenant): su clasificación y su vínculo son los de ESE grupo.
+    // Una misma persona en dos grupos tiene un registro en cada uno, con su propia condición.
+    {
+      type: 'row',
+      admin: { condition: soloGrupos },
+      fields: [
+        {
+          name: 'tipoInvestigador',
+          label: 'Tipo de investigador',
+          type: 'select',
+          options: [
+            { label: 'Titular', value: 'titular' },
+            { label: 'Adherente', value: 'adherente' },
+          ],
+          admin: { description: 'Agrupa a los miembros en la landing del grupo.' },
+        },
+        {
+          name: 'coordinador',
+          label: 'Coordinador del grupo',
+          type: 'checkbox',
+          defaultValue: false,
+          validate: coordinadorUnico,
+          admin: { description: 'Solo un integrante por grupo. Aparece en «Contactos».' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      admin: { condition: soloGrupos },
+      fields: [
+        { name: 'vinculo', label: 'Vínculo con la UNMSM', type: 'text', admin: { description: 'Ej.: Docente permanente, Estudiante de pregrado.' } },
+        { name: 'facultad', label: 'Facultad', type: 'text', admin: { description: 'Ej.: Letras y Ciencias Humanas.' } },
+      ],
+    },
     { name: 'foto', label: 'Retrato', type: 'upload', relationTo: 'media', admin: { description: 'Si no hay retrato se muestran las iniciales.' } },
     {
       name: 'bio',
@@ -125,6 +185,9 @@ export const Eventos: CollectionConfig = {
   ],
 }
 
+/** Campos de la landing que solo usan los grupos (pestaña «Grupo de investigación»). */
+const CAMPOS_LANDING_GRUPO = ['objetivoGeneral', 'objetivosEspecificos', 'servicios', 'lineas', 'ambientes', 'equipos', 'correoContacto']
+
 /** Contenido de la landing: un único documento por grupo (global del plugin multi-tenant). */
 export const Landing: CollectionConfig = {
   slug: 'landing',
@@ -132,12 +195,16 @@ export const Landing: CollectionConfig = {
   admin: { useAsTitle: 'nombre', group: GRUPO_PANEL },
   versions: { drafts: true },
   access: { read: publicadoOPanel, create: usuarioDelPanel, update: usuarioDelPanel, delete: soloSuperadmin, readVersions: usuarioDelPanel },
-  hooks: hooksEditoriales([
-    { campo: 'fotoHero', destino: 'media' },
-    { campo: 'imagen', destino: 'media', enArray: 'galeria' },
-    { campo: 'logo', destino: 'media', enArray: 'aliados' },
-  ]),
+  hooks: conSoloGrupos(
+    hooksEditoriales([
+      { campo: 'fotoHero', destino: 'media' },
+      { campo: 'imagen', destino: 'media', enArray: 'galeria' },
+      { campo: 'logo', destino: 'media', enArray: 'aliados' },
+    ]),
+    CAMPOS_LANDING_GRUPO,
+  ),
   fields: [
+    campoPlantilla,
     {
       type: 'tabs',
       tabs: [
@@ -246,6 +313,83 @@ export const Landing: CollectionConfig = {
                 { name: 'pie', label: 'Pie', type: 'text', required: true },
                 { name: 'alta', label: 'Lámina alta (ocupa dos filas)', type: 'checkbox' },
               ],
+            },
+          ],
+        },
+        {
+          // Estructura de información de ADISCO (letras.unmsm.edu.pe), mostrada con la Plantilla Grupo de Claude Design.
+          // La presentación es el «Texto» de Portada. Todo es opcional: un apartado sin datos no se inventa.
+          label: 'Grupo de investigación',
+          description: 'Objetivos, servicios, líneas de investigación, infraestructura y correo de contacto. Solo en los grupos (no en los subgrupos).',
+          admin: { condition: soloGrupos },
+          fields: [
+            { name: 'objetivoGeneral', label: 'Objetivo general', type: 'textarea' },
+            {
+              name: 'objetivosEspecificos',
+              label: 'Objetivos específicos',
+              type: 'array',
+              labels: { singular: 'Objetivo específico', plural: 'Objetivos específicos' },
+              admin: { description: 'Se numeran en el orden de la lista.' },
+              fields: [{ name: 'objetivo', label: 'Objetivo', type: 'textarea', required: true }],
+            },
+            {
+              name: 'servicios',
+              label: 'Servicios',
+              type: 'array',
+              labels: { singular: 'Servicio', plural: 'Servicios' },
+              fields: [{ name: 'servicio', label: 'Servicio', type: 'textarea', required: true }],
+            },
+            {
+              name: 'lineas',
+              label: 'Líneas de investigación',
+              type: 'array',
+              labels: { singular: 'Línea', plural: 'Líneas' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'codigo', label: 'Código', type: 'text', admin: { width: '30%', description: 'Ej.: E.2.2.6.' } },
+                    { name: 'linea', label: 'Línea', type: 'text', required: true, admin: { width: '70%' } },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'ambientes',
+              label: 'Ambientes físicos',
+              type: 'array',
+              labels: { singular: 'Ambiente', plural: 'Ambientes' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'ambiente', label: 'Ambiente', type: 'text', required: true },
+                    { name: 'ubicacion', label: 'Ubicación', type: 'text' },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'equipos',
+              label: 'Equipamiento de laboratorio',
+              type: 'array',
+              labels: { singular: 'Equipo', plural: 'Equipos' },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'codigo', label: 'Código', type: 'text' },
+                    { name: 'laboratorio', label: 'Laboratorio', type: 'text', required: true },
+                    { name: 'responsable', label: 'Responsable', type: 'text' },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'correoContacto',
+              label: 'Correo de contacto',
+              type: 'email',
+              admin: { description: 'Aparece en «Contactos». La coordinación es la del integrante marcado como coordinador.' },
             },
           ],
         },

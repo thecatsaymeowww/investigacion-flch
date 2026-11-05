@@ -1,0 +1,426 @@
+/* Plantilla Grupo (Claude Design, redesign/Plantilla Grupo.dc.html): apartados con la estructura de ADISCO.
+   Medidas y tipografía del HTML de referencia sobre los tokens de .tema-flch (azul institucional #192b52, ocre AA). */
+
+/* Sección numerada: cabecera (número y título) a la izquierda y contenido en las dos columnas restantes. */
+.seccion {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--borde);
+  scroll-margin-top: var(--nav-alto);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 24px 56px;
+}
+.cab {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.numero {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.h2 {
+  margin: 0;
+  font: 500 clamp(28px, 3.2vw, 38px)/1.1 var(--f-serif);
+  color: var(--azul);
+}
+.resumen {
+  font-size: 14px;
+  color: var(--texto-2);
+}
+.cuerpo {
+  grid-column: span 2;
+  min-width: 0;
+}
+/* Con una sola columna, el contenido ocupa la fila entera (sin columna implícita). */
+@media (max-width: 700px) {
+  .cuerpo {
+    grid-column: 1 / -1;
+  }
+}
+
+/* 01 Presentación */
+.presentacion {
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.presentacion p {
+  margin: 0;
+  font: 400 clamp(18px, 1.6vw, 20px)/1.65 var(--f-serif);
+  color: var(--texto);
+  text-wrap: pretty;
+}
+
+/* Cifras (sin título, como en la referencia) */
+.cifras {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--borde);
+  scroll-margin-top: var(--nav-alto);
+}
+.cifrasLista {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+}
+/* Número primero y etiqueta debajo, sin cambiar el orden de lectura (dt antes que dd). */
+.cifra {
+  padding: 8px 20px 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cifraValor {
+  order: -1;
+  margin: 0;
+  font: 500 clamp(48px, 5vw, 64px)/1 var(--f-serif);
+  color: var(--azul);
+}
+.cifraEtiqueta {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.cifraNota {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--texto-2);
+  text-wrap: pretty;
+}
+
+/* 02 Objetivos */
+.objetivos {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.general {
+  background: var(--azul);
+  color: var(--blanco);
+  border-radius: var(--radio);
+  padding: 26px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.general p {
+  margin: 0;
+  font: 400 clamp(20px, 2vw, 24px)/1.4 var(--f-serif);
+  text-wrap: pretty;
+}
+.rotulo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.general .rotulo {
+  color: var(--oro-claro);
+}
+.especificos {
+  display: flex;
+  flex-direction: column;
+}
+.especificos .rotulo {
+  padding-bottom: 10px;
+}
+.lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.objetivo {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--borde);
+}
+.objetivoN {
+  font: 500 22px/1.2 var(--f-serif);
+  color: var(--oro);
+}
+.objetivoTexto {
+  font-size: 16px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* 03 Servicios */
+.servicios {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: 14px;
+}
+.servicio {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.servicioN {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--oro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 13px var(--f-sans);
+  color: var(--ocre);
+}
+.servicioTexto {
+  font-size: 15.5px;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* 04 Líneas de investigación: tabla Código / Línea */
+.lineas {
+  width: 100%;
+  border-collapse: collapse;
+  border-bottom: 1px solid var(--borde);
+}
+.lineas th {
+  padding: 0 16px 10px 0;
+  border-bottom: 2px solid var(--azul);
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--texto-2);
+}
+.lineas td {
+  padding: 18px 16px 18px 0;
+  border-top: 1px solid var(--borde);
+  vertical-align: baseline;
+}
+.lineas th:first-child,
+.lineas td:first-child {
+  width: 136px;
+}
+.lineas th:last-child,
+.lineas td:last-child {
+  padding-right: 0;
+}
+.codigo {
+  font: 500 13.5px var(--f-mono);
+  color: var(--ocre);
+  overflow-wrap: anywhere;
+}
+.linea {
+  font: 500 21px/1.3 var(--f-serif);
+  color: var(--azul);
+  text-wrap: pretty;
+}
+@media (max-width: 480px) {
+  .lineas th:first-child,
+  .lineas td:first-child {
+    width: 96px;
+  }
+  .linea {
+    font-size: 19px;
+  }
+}
+
+/* 05 Infraestructura */
+.infra {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 16px;
+}
+.tarjeta {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-margin-top: calc(var(--nav-alto) + 16px);
+}
+.h3 {
+  margin: 0;
+  font: 600 20px/1.2 var(--f-serif);
+  color: var(--azul);
+}
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 10px;
+  border-top: 1px solid var(--borde-suave);
+}
+.equipo {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--borde-suave);
+}
+.equipoTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.equipoCodigo {
+  font: 500 12.5px var(--f-mono);
+  color: var(--ocre);
+  overflow-wrap: anywhere;
+}
+.itemNombre {
+  font-size: 15px;
+  font-weight: 600;
+}
+.itemNota {
+  font-size: 13.5px;
+  color: var(--texto-2);
+}
+.vacio {
+  margin: 0;
+  font-size: 14px;
+  color: var(--texto-2);
+  padding: 14px;
+  border: 1px dashed var(--borde-campo);
+  border-radius: var(--radio-s);
+}
+
+/* 06 Miembros: titulares y adherentes */
+.miembros {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.grupoMiembros {
+  display: flex;
+  flex-direction: column;
+}
+.grupoCab {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--azul);
+}
+.grupoTitulo {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--azul);
+}
+.grupoCuenta {
+  font-size: 12px;
+  color: var(--texto-2);
+}
+.miembro {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--borde);
+}
+/* Con biografía, la fila abre la ficha (diálogo de components/landing/FichaIntegrante). */
+.miembroBoton {
+  width: 100%;
+  margin: 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--borde);
+  border-radius: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.miembroBoton:hover .miembroNombre {
+  color: var(--azul);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.miembroBoton:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}
+.avatar {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--sin-foto);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 15px var(--f-serif);
+  color: var(--azul);
+}
+.avatar img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.miembroTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.miembroNombre {
+  font: 600 17px/1.25 var(--f-serif);
+  color: var(--texto);
+  overflow-wrap: anywhere;
+}
+.miembroDetalle {
+  font-size: 13px;
+  color: var(--texto-2);
+}
+.insignia {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: var(--crema);
+  color: var(--ocre);
+  border: 1px solid var(--crema-borde);
+  padding: 4px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.intro {
+  margin: 0 0 4px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--texto-2);
+  text-wrap: pretty;
+}
+@media (max-width: 480px) {
+  .miembro {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+  .miembro .insignia {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

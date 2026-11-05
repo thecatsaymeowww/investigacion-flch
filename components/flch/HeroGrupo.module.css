@@ -31,18 +31,6 @@
   text-transform: uppercase;
   color: var(--oro-claro);
 }
-.padre {
-  color: var(--sobre-azul-2);
-  font-weight: 500;
-}
-.padre a {
-  color: var(--blanco);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.padre a:hover {
-  color: var(--oro-claro);
-}
 .h1 {
   margin: 0;
   font: 500 clamp(46px, 7vw, 84px)/1 var(--f-serif);
@@ -56,15 +44,8 @@
   color: var(--sobre-azul);
   text-wrap: balance;
 }
-.presentacion {
-  margin: 0;
-  max-width: 600px;
-  font-size: 16.5px;
-  line-height: 1.65;
-  color: var(--sobre-azul);
-  text-wrap: pretty;
-}
 .botones {
+  position: relative;
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -97,6 +78,133 @@
   background: rgba(255, 255, 255, 0.1);
   color: var(--blanco);
   text-decoration: none;
+}
+
+/* Botón «Subgrupos» y su panel (Plantilla Grupo) */
+.subgrupos {
+  position: relative;
+}
+.subBoton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: var(--radio-s);
+  border: 1.5px solid var(--oro);
+  background: transparent;
+  color: var(--blanco);
+  font: 600 14px var(--f-sans);
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(217, 165, 58, 0.25);
+  transition: background 0.2s;
+}
+.subBoton:hover,
+.subBoton[aria-expanded='true'] {
+  background: rgba(217, 165, 58, 0.18);
+}
+.flecha {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--oro-claro);
+  transition: transform 0.25s;
+}
+.subBoton[aria-expanded='true'] .flecha {
+  transform: rotate(180deg);
+}
+.panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  min-width: 290px;
+  max-width: calc(100vw - 2 * var(--gutter));
+  background: var(--blanco);
+  border-radius: var(--radio);
+  border-top: 3px solid var(--oro);
+  box-shadow: 0 18px 40px rgba(16, 28, 56, 0.28);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transform-origin: top left;
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    visibility 0.2s;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+}
+.panel[data-abierto='true'] {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.panelTitulo {
+  padding: 8px 12px 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.subItem {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: var(--radio-s);
+  color: var(--texto);
+  transition: background 0.15s;
+}
+.subItem:hover {
+  background: var(--hover);
+  color: var(--azul);
+  text-decoration: none;
+}
+.subN {
+  font: 500 18px/1 var(--f-serif);
+  color: var(--oro);
+}
+.subTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.subNombre {
+  font: 600 17px/1.2 var(--f-serif);
+  color: var(--azul);
+}
+.subLema {
+  font-size: 12.5px;
+  color: var(--texto-2);
+}
+.subIr {
+  color: var(--azul);
+  font-size: 14px;
+}
+/* En pantallas estrechas el botón puede quedar a la derecha de la fila: el panel se ancla a la fila de botones entera,
+   para no salirse de la pantalla (ni crear desplazamiento horizontal, aunque esté cerrado). */
+@media (max-width: 600px) {
+  .subgrupos {
+    position: static;
+  }
+  .panel {
+    left: 0;
+    right: 0;
+    min-width: 0;
+    max-width: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .flecha,
+  .subBoton {
+    transition: none;
+  }
 }
 
 .figura {

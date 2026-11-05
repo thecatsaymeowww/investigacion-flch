@@ -68,8 +68,26 @@ async function leerLanding(grupo: Grupo) {
   const l = landingRes.docs[0] as Landing | undefined
   if (!l) return null
 
+  // Plantilla por la relación real (grupos.padre), aunque el padre esté inactivo: un subgrupo usa siempre el modelo y el
+  // diseño de Prensa y Literatura, y nunca recibe los apartados propios de los grupos.
+  const esSubgrupo = grupo.padre != null
+  const texto = (v: string | null | undefined) => (v ?? '').trim()
   return {
-    grupo: { id: g, ruta: grupo.ruta ?? grupo.slug, nombre: grupo.nombre, padre: padreDe(grupo), escuela: escuelaDe(grupo) },
+    grupo: { id: g, ruta: grupo.ruta ?? grupo.slug, nombre: grupo.nombre, padre: padreDe(grupo), escuela: escuelaDe(grupo), esSubgrupo },
+    /** Estructura de información de ADISCO (solo grupos; en un subgrupo, vacía). */
+    investigacion: {
+      objetivoGeneral: esSubgrupo ? '' : texto(l.objetivoGeneral),
+      objetivos: esSubgrupo ? [] : (l.objetivosEspecificos ?? []).map((o) => texto(o.objetivo)).filter(Boolean),
+      servicios: esSubgrupo ? [] : (l.servicios ?? []).map((s) => texto(s.servicio)).filter(Boolean),
+      lineas: esSubgrupo ? [] : (l.lineas ?? []).map((x) => ({ codigo: texto(x.codigo), linea: texto(x.linea) })).filter((x) => x.linea),
+      ambientes: esSubgrupo ? [] : (l.ambientes ?? []).map((a) => ({ ambiente: texto(a.ambiente), ubicacion: texto(a.ubicacion) })).filter((a) => a.ambiente),
+      equipos: esSubgrupo
+        ? []
+        : (l.equipos ?? [])
+            .map((e) => ({ codigo: texto(e.codigo), laboratorio: texto(e.laboratorio), responsable: texto(e.responsable) }))
+            .filter((e) => e.laboratorio),
+      correo: esSubgrupo ? '' : texto(l.correoContacto),
+    },
     identidad: {
       nombre: l.nombre,
       grupo: l.grupoTexto,
@@ -103,6 +121,11 @@ async function leerLanding(grupo: Grupo) {
       rol: m.rol ?? '',
       foto: imagen(m.foto),
       bio: parrafos(m.bio),
+      // Clasificación en ESTE grupo (ADISCO, «Miembros»); en un subgrupo no se usa.
+      tipo: esSubgrupo ? null : (m.tipoInvestigador ?? null),
+      coordinador: !esSubgrupo && Boolean(m.coordinador),
+      vinculo: esSubgrupo ? '' : texto(m.vinculo),
+      facultad: esSubgrupo ? '' : texto(m.facultad),
     })),
     aliados: (l.aliados ?? []).map((a) => ({ nombre: a.nombre, url: a.url ?? '', logo: imagen(a.logo) })),
     publicaciones: (publicaciones.docs as Publicacione[]).map((p) => {
@@ -158,6 +181,13 @@ const rutasActivas = unstable_cache(
 )
 
 /**
+ * Versión de la forma de DatosLanding en la clave de caché. Hay que subirla cada vez que esa forma cambie: la caché de
+ * datos (.next/cache) sobrevive a los builds y, sin esto, el primer servidor nuevo recibiría entradas con la forma
+ * antigua (p. ej. sin `investigacion`) hasta que caducaran.
+ */
+const VERSION_LANDING = 'v2-adisco'
+
+/**
  * Landing completa de un grupo o subgrupo activo, por su ruta ("litartmo" o
  * "litartmo/subgrupo"), o null. Caché por grupo: solo la invalida un cambio de ese grupo.
  * Solo las rutas de la lista de grupos activos tienen entrada de caché propia: si no, cada URL inventada añadiría
@@ -170,7 +200,7 @@ export async function obtenerLanding(ruta: string) {
     ? await unstable_cache(() => leerGrupo(ruta), ['grupo', ruta], { tags: ['grupos'], revalidate: 300 })()
     : await leerGrupo(ruta)
   if (!grupo) return null
-  return unstable_cache(() => leerLanding(grupo), ['landing', String(grupo.id)], { tags: [`g:${grupo.id}`, 'grupos'], revalidate: 300 })()
+  return unstable_cache(() => leerLanding(grupo), ['landing', VERSION_LANDING, String(grupo.id)], { tags: [`g:${grupo.id}`, 'grupos'], revalidate: 300 })()
 }
 
 export type EntradaDirectorio = {

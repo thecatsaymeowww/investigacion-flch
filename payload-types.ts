@@ -140,6 +140,7 @@ export interface UsuarioAuthOperations {
 export interface Landing {
   id: number;
   grupo?: (number | null) | Grupo;
+  plantilla?: string | null;
   /**
    * Ej.: Prensa y Literatura. La «y» aparece en cursiva.
    */
@@ -189,6 +190,51 @@ export interface Landing {
         id?: string | null;
       }[]
     | null;
+  objetivoGeneral?: string | null;
+  /**
+   * Se numeran en el orden de la lista.
+   */
+  objetivosEspecificos?:
+    | {
+        objetivo: string;
+        id?: string | null;
+      }[]
+    | null;
+  servicios?:
+    | {
+        servicio: string;
+        id?: string | null;
+      }[]
+    | null;
+  lineas?:
+    | {
+        /**
+         * Ej.: E.2.2.6.
+         */
+        codigo?: string | null;
+        linea: string;
+        id?: string | null;
+      }[]
+    | null;
+  ambientes?:
+    | {
+        ambiente: string;
+        ubicacion?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  equipos?:
+    | {
+        codigo?: string | null;
+        laboratorio: string;
+        responsable?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Aparece en «Contactos». La coordinación es la del integrante marcado como coordinador.
+   */
+  correoContacto?: string | null;
   colaborarEtiqueta?: string | null;
   colaborarTitular?: string | null;
   colaborarTexto?: string | null;
@@ -312,11 +358,28 @@ export interface Media {
 export interface Integrante {
   id: number;
   grupo?: (number | null) | Grupo;
+  plantilla?: string | null;
   nombre: string;
   /**
    * Se muestra bajo el nombre. Ej.: Doctor, Magíster, Estudiante.
    */
   rol?: string | null;
+  /**
+   * Agrupa a los miembros en la landing del grupo.
+   */
+  tipoInvestigador?: ('titular' | 'adherente') | null;
+  /**
+   * Solo un integrante por grupo. Aparece en «Contactos».
+   */
+  coordinador?: boolean | null;
+  /**
+   * Ej.: Docente permanente, Estudiante de pregrado.
+   */
+  vinculo?: string | null;
+  /**
+   * Ej.: Letras y Ciencias Humanas.
+   */
+  facultad?: string | null;
   /**
    * Si no hay retrato se muestran las iniciales.
    */
@@ -590,6 +653,7 @@ export interface PayloadMigration {
  */
 export interface LandingSelect<T extends boolean = true> {
   grupo?: T;
+  plantilla?: T;
   nombre?: T;
   grupoTexto?: T;
   universidad?: T;
@@ -630,6 +694,42 @@ export interface LandingSelect<T extends boolean = true> {
         alta?: T;
         id?: T;
       };
+  objetivoGeneral?: T;
+  objetivosEspecificos?:
+    | T
+    | {
+        objetivo?: T;
+        id?: T;
+      };
+  servicios?:
+    | T
+    | {
+        servicio?: T;
+        id?: T;
+      };
+  lineas?:
+    | T
+    | {
+        codigo?: T;
+        linea?: T;
+        id?: T;
+      };
+  ambientes?:
+    | T
+    | {
+        ambiente?: T;
+        ubicacion?: T;
+        id?: T;
+      };
+  equipos?:
+    | T
+    | {
+        codigo?: T;
+        laboratorio?: T;
+        responsable?: T;
+        id?: T;
+      };
+  correoContacto?: T;
   colaborarEtiqueta?: T;
   colaborarTitular?: T;
   colaborarTexto?: T;
@@ -649,8 +749,13 @@ export interface LandingSelect<T extends boolean = true> {
  */
 export interface IntegrantesSelect<T extends boolean = true> {
   grupo?: T;
+  plantilla?: T;
   nombre?: T;
   rol?: T;
+  tipoInvestigador?: T;
+  coordinador?: T;
+  vinculo?: T;
+  facultad?: T;
   foto?: T;
   bio?: T;
   orden?: T;

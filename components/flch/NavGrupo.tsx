@@ -1,17 +1,34 @@
 import Link from 'next/link'
+import type { DatosLanding } from '@/lib/cms'
 import n from './NavGrupo.module.css'
 
+/** Apartados de la Plantilla Grupo (Claude Design, estructura de ADISCO) y, después, las secciones propias del grupo. */
 const ENLACES: [string, string][] = [
-  ['cifras', 'Cifras'],
-  ['integrantes', 'Integrantes'],
+  ['presentacion', 'Presentación'],
+  ['objetivos', 'Objetivos'],
+  ['servicios', 'Servicios'],
+  ['lineas', 'Líneas'],
+  ['infraestructura', 'Infraestructura'],
+  ['miembros', 'Miembros'],
   ['publicaciones', 'Publicaciones'],
   ['actividades', 'Actividades'],
   ['agenda', 'Agenda'],
   ['galeria', 'Galería'],
 ]
 
+/** Apartados que este grupo no muestra porque no tiene contenido para ellos: no se enlazan. */
+export function seccionesOcultas(d: NonNullable<DatosLanding>): string[] {
+  const inv = d.investigacion
+  return [
+    !inv.objetivoGeneral && !inv.objetivos.length && 'objetivos',
+    !inv.servicios.length && 'servicios',
+    !inv.lineas.length && 'lineas',
+    !d.galeria.length && 'galeria',
+  ].filter((x): x is string => Boolean(x))
+}
+
 type Props = {
-  /** Ruta del grupo: "adisco" o "litartmo/subgrupo". */
+  /** Ruta del grupo: "adisco". */
   ruta: string
   /** Nombre corto (sigla) del grupo. */
   nombre: string
@@ -20,7 +37,7 @@ type Props = {
   ocultas?: string[]
 }
 
-/** Barra fija del grupo: vuelta al directorio, sigla, secciones y "Colaborar". En móvil las secciones se desplazan en horizontal. */
+/** Barra fija del grupo: vuelta al directorio, sigla, apartados y «Contacto». En móvil los apartados se desplazan en horizontal. */
 export function NavGrupo({ ruta, nombre, pagina, ocultas = [] }: Props) {
   const base = `/${ruta}`
   const ancla = (id: string) => (pagina === 'portada' ? `#${id}` : `${base}#${id}`)
@@ -41,7 +58,7 @@ export function NavGrupo({ ruta, nombre, pagina, ocultas = [] }: Props) {
             </a>
           ))}
           <a href={ancla('colaborar')} className={n.cta}>
-            Colaborar
+            Contacto
           </a>
         </div>
       </div>

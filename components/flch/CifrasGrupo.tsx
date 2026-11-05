@@ -1,26 +1,27 @@
 import type { DatosLanding } from '@/lib/cms'
-import { Seccion } from './Seccion'
-import c from './CifrasGrupo.module.css'
+import p from './PlantillaGrupo.module.css'
 
 type Cifra = NonNullable<DatosLanding>['cifras'][number]
 
 /**
- * Cifras calculadas en lib/cms (nunca escritas a mano). Orden de la referencia: publicaciones, integrantes,
- * tercera cifra (allí «proyectos», aquí actividades: el modelo no tiene proyectos) y fundación.
+ * Cifras calculadas en lib/cms (nunca escritas a mano), en el orden de la Plantilla Grupo: publicaciones, miembros,
+ * tercera cifra (allí «proyectos», aquí actividades: el modelo no tiene proyectos) y líneas de investigación.
+ * Las etiquetas y notas son las editables de la landing; las de las líneas, las de la referencia.
  */
-export function CifrasGrupo({ cifras }: { cifras: Cifra[] }) {
-  const [fundacion, integrantes, publicaciones, actividades] = cifras
+export function CifrasGrupo({ cifras, lineas }: { cifras: Cifra[]; lineas: number }) {
+  const [, integrantes, publicaciones, actividades] = cifras
+  const lista = [publicaciones, integrantes, actividades, { valor: String(lineas), etiqueta: 'Líneas', nota: 'Líneas de investigación registradas.' }]
   return (
-    <Seccion id="cifras" titulo="En cifras" compacta>
-      <dl className={c.cifras}>
-        {[publicaciones, integrantes, actividades, fundacion].filter(Boolean).map((x, i) => (
-          <div key={i} className={c.cifra}>
-            <dt className={c.etiqueta}>{x.etiqueta}</dt>
-            <dd className={c.valor}>{x.valor}</dd>
-            {x.nota && <dd className={c.nota}>{x.nota}</dd>}
+    <section id="cifras" className={p.cifras} aria-label="El grupo en cifras">
+      <dl className={p.cifrasLista}>
+        {lista.filter(Boolean).map((x, i) => (
+          <div key={i} className={p.cifra}>
+            <dt className={p.cifraEtiqueta}>{x.etiqueta}</dt>
+            <dd className={p.cifraValor}>{x.valor}</dd>
+            {x.nota && <dd className={p.cifraNota}>{x.nota}</dd>}
           </div>
         ))}
       </dl>
-    </Seccion>
+    </section>
   )
 }

@@ -262,6 +262,69 @@ export const revalidarDirectorio: CollectionAfterChangeHook = async ({ doc, prev
 }
 
 /**
+ * Plantilla de contenido de un grupo, por su relación real (`grupos.padre`), nunca por nombre o ruta: un grupo con
+ * padre es un subgrupo (modelo y diseño de Prensa y Literatura) y uno sin padre, un grupo de investigación (modelo
+ * ampliado según ADISCO). Se guarda en `req.context` para no repetir la consulta dentro de la misma operación.
+ */
+export async function esSubgrupo(req: PayloadRequest, grupo: unknown): Promise<boolean | null> {
+  if (grupo && typeof grupo === 'object' && 'padre' in grupo) return (grupo as { padre?: unknown }).padre != null
+  const id = idDe(grupo)
+  if (id == null) return null
+  const cache = ((req.context.plantillas as Map<number, boolean> | undefined) ??= new Map<number, boolean>())
+  if (!cache.has(id)) {
+    const g = await req.payload.findByID({ collection: 'grupos', id, overrideAccess: true, req, depth: 0 }).catch(() => null)
+    if (!g) return null
+    cache.set(id, g.padre != null)
+  }
+  return cache.get(id)!
+}
+
+/**
+ * Campo virtual `plantilla` (sin columna): «grupo» o «subgrupo». Solo sirve al panel, para mostrar los campos propios
+ * de los grupos (admin.condition no puede consultar la base); fuera del panel no se calcula.
+ */
+export const calcularPlantilla = async ({ data, req }: { data?: Doc; req: PayloadRequest }) => {
+  if (!req.user || !data) return undefined
+  const sub = await esSubgrupo(req, data.grupo)
+  return sub == null ? undefined : sub ? 'subgrupo' : 'grupo'
+}
+
+/**
+ * Los campos propios de los grupos de investigación no se escriben nunca en un subgrupo, por ninguna vía (panel o API):
+ * lo que llegue se sustituye por lo que ya había (nada, en un alta). No borra datos: si un grupo pasa a ser subgrupo,
+ * los suyos se conservan sin mostrarse.
+ */
+export function soloEnGrupos(campos: string[]): CollectionBeforeValidateHook {
+  return async ({ data, originalDoc, req }) => {
+    if (!data) return data
+    if (!(await esSubgrupo(req, data.grupo ?? originalDoc?.grupo))) return data
+    const limpio: Record<string, unknown> = { ...data }
+    for (const c of campos) {
+      if (originalDoc && c in originalDoc) limpio[c] = originalDoc[c]
+      else delete limpio[c]
+    }
+    return limpio
+  }
+}
+
+/**
+ * Un único coordinador por grupo (ADISCO lo indica en «Tipo de investigador»). Se cuentan los demás integrantes del
+ * mismo grupo marcados como coordinadores, sin leer ni devolver sus datos.
+ */
+export async function coordinadorUnico(valor: unknown, { data, id, req }: { data?: Doc; id?: number | string; req: PayloadRequest }): Promise<true | string> {
+  if (valor !== true) return true
+  const grupo = grupoDe(data)
+  if (grupo == null) return true
+  const { totalDocs } = await req.payload.count({
+    collection: 'integrantes',
+    overrideAccess: true,
+    req,
+    where: { and: [{ grupo: { equals: grupo } }, { coordinador: { equals: true } }, ...(id != null ? [{ id: { not_equals: id } }] : [])] },
+  })
+  return totalDocs === 0 || 'Este grupo ya tiene un coordinador. Desmárcalo antes de marcar a otro integrante.'
+}
+
+/**
  * Cola por grupo: la búsqueda de duplicados y la creación de un mensaje no se solapan con las de otro envío al mismo
  * grupo. En memoria de este proceso (un solo proceso, D10), como los límites de envío.
  */

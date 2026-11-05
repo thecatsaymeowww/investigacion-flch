@@ -10,10 +10,10 @@ import { CifrasGrupo } from '@/components/flch/CifrasGrupo'
 import { GaleriaGrupo } from '@/components/flch/GaleriaGrupo'
 import { HeroGrupo } from '@/components/flch/HeroGrupo'
 import { IntegrantesGrupo } from '@/components/flch/IntegrantesGrupo'
-import { NavGrupo } from '@/components/flch/NavGrupo'
+import { Infraestructura, Lineas, numero, Objetivos, Presentacion, Servicios } from '@/components/flch/InvestigacionGrupo'
+import { NavGrupo, seccionesOcultas } from '@/components/flch/NavGrupo'
 import { Pie } from '@/components/flch/Pie'
 import { PublicacionesGrupo } from '@/components/flch/PublicacionesGrupo'
-import { SubgruposGrupo } from '@/components/flch/SubgruposGrupo'
 import { Actividades } from '@/components/landing/Actividades'
 import { Agenda } from '@/components/landing/Agenda'
 import { Aliados } from '@/components/landing/Aliados'
@@ -31,7 +31,6 @@ import { TemaPrensa } from '@/components/temas/TemaPrensa'
 import { emitirMarca } from '@/lib/antispam'
 import { listarGrupos, obtenerLanding, type DatosLanding, type EntradaDirectorio } from '@/lib/cms'
 import { etiquetaEscuela } from '@/lib/escuelas'
-import { usaTemaPrensa } from '@/lib/temas'
 import { hoyLima } from '@/lib/utils'
 
 /** Metadatos de la landing de un grupo o subgrupo. */
@@ -42,12 +41,16 @@ export async function metadatosLanding(ruta: string): Promise<Metadata> {
   return { title: `${id.nombre} · ${id.grupo} · ${id.sigla}`, description: id.lema }
 }
 
-/** Landing completa. Grupos y subgrupos usan la misma página: solo cambia la ruta (y el tema, ver lib/temas). */
+/**
+ * Landing completa. La plantilla sale de la relación real del grupo (`grupos.padre`), no de su nombre ni de su ruta:
+ * - subgrupo → diseño y modelo de Prensa y Literatura, sin cambios;
+ * - grupo de investigación → Plantilla Grupo de Claude Design, con la estructura de información de ADISCO.
+ */
 export async function PaginaLanding({ ruta }: { ruta: string }) {
   const d = await obtenerLanding(ruta)
   if (!d) notFound()
-  if (usaTemaPrensa(d.grupo.ruta)) return <LandingPrensa d={d} />
-  return <LandingFlch d={d} subgrupos={d.grupo.padre ? [] : await subgruposDe(d.grupo.ruta)} />
+  if (d.grupo.esSubgrupo) return <LandingPrensa d={d} />
+  return <LandingFlch d={d} subgrupos={await subgruposDe(d.grupo.ruta)} />
 }
 
 /**
@@ -76,28 +79,53 @@ const propsColaborar = (d: NonNullable<DatosLanding>) => ({
   accion: enviarPropuesta.bind(null, d.grupo.ruta),
 })
 
-/** Plantilla Grupo (Claude Design): la de todos los grupos salvo los de tema propio. */
+/**
+ * Plantilla Grupo (Claude Design, redesign/Plantilla Grupo.dc.html) para los grupos de investigación. Apartados
+ * numerados como en la referencia; los que no tienen datos (objetivos, servicios, líneas) no se muestran y la
+ * numeración sigue a los visibles. Infraestructura se muestra siempre, con el aviso de «no hay registros» del diseño.
+ * Las secciones propias de la plataforma (aliados, publicaciones, actividades, agenda, galería) se conservan entre
+ * Miembros y Contactos.
+ */
 function LandingFlch({ d, subgrupos }: { d: NonNullable<DatosLanding>; subgrupos: EntradaDirectorio['subgrupos'] }) {
+  const inv = d.investigacion
+  let n = 0
+  const sig = () => ++n
+  const coordinador = d.integrantes.find((m) => m.coordinador)
   return (
     <TemaFlch>
       <Cabecera />
-      <NavGrupo ruta={d.grupo.ruta} nombre={d.identidad.nombre} pagina="portada" ocultas={d.galeria.length ? [] : ['galeria']} />
-      <HeroGrupo d={d} />
+      <NavGrupo ruta={d.grupo.ruta} nombre={d.identidad.nombre} pagina="portada" ocultas={seccionesOcultas(d)} />
+      <HeroGrupo d={d} subgrupos={subgrupos} />
       <main className={`${b.contenedor} ${b.principal}`}>
-        <CifrasGrupo cifras={d.cifras} />
-        <SubgruposGrupo subgrupos={subgrupos} />
-        <IntegrantesGrupo intro={d.integrantesIntro} integrantes={d.integrantes} />
+        <Presentacion n={sig()} texto={d.editorial.texto} />
+        <CifrasGrupo cifras={d.cifras} lineas={inv.lineas.length} />
+        {(inv.objetivoGeneral || inv.objetivos.length > 0) && <Objetivos n={sig()} inv={inv} />}
+        {inv.servicios.length > 0 && <Servicios n={sig()} servicios={inv.servicios} />}
+        {inv.lineas.length > 0 && <Lineas n={sig()} lineas={inv.lineas} />}
+        <Infraestructura n={sig()} inv={inv} />
+        <IntegrantesGrupo n={sig()} intro={d.integrantesIntro} integrantes={d.integrantes} />
         <AliadosGrupo aliados={d.aliados} />
         <PublicacionesGrupo ruta={d.grupo.ruta} publicaciones={d.publicaciones} />
         <ActividadesGrupo actividades={d.actividades} />
         <AgendaGrupo eventos={d.eventos} hoyServidor={hoyLima()} />
         <GaleriaGrupo galeria={d.galeria} />
-        <Colaborar {...propsColaborar(d)} variante="flch" />
+        <Colaborar
+          {...propsColaborar(d)}
+          etiqueta={`${numero(sig())} · Contactos`}
+          titular={`Escriba a ${d.identidad.nombre}`}
+          texto={d.colaborar.texto || TEXTO_CONTACTO}
+          variante="flch"
+          contacto={{ coordinacion: coordinador?.nombre ?? '', correo: inv.correo }}
+        />
       </main>
       <Pie variante="grupo" />
     </TemaFlch>
   )
 }
+
+/** Texto de «Contactos» de la referencia, si el grupo no ha escrito el suyo. */
+const TEXTO_CONTACTO =
+  'Recibimos consultas sobre asesoría, tesis, proyectos de investigación, publicaciones y actividades conjuntas. Cuéntenos qué necesita y le responderemos.'
 
 /** Diseño de periódico de Prensa y Literatura, sin cambios salvo la franja institucional (etapa 4.1, D6). */
 function LandingPrensa({ d }: { d: NonNullable<DatosLanding> }) {

@@ -1,41 +1,38 @@
-import Link from 'next/link'
-import type { DatosLanding } from '@/lib/cms'
+import type { DatosLanding, EntradaDirectorio } from '@/lib/cms'
 import { etiquetaEscuela } from '@/lib/escuelas'
 import { Foto } from './Foto'
 import h from './HeroGrupo.module.css'
+import { MenuSubgrupos } from './MenuSubgrupos'
 
 /**
- * Identidad del grupo. Correspondencia con la referencia: sigla → nombre de la cabecera (landing.nombre),
- * nombre completo → lema, presentación → texto de portada. La línea superior lleva la escuela profesional
- * (o, si el grupo aún no la tiene, la etiqueta de portada) y, en un subgrupo, su grupo padre.
+ * Hero de la Plantilla Grupo (Claude Design). Correspondencia: sigla → nombre de la cabecera (landing.nombre), nombre
+ * completo → lema; la línea superior lleva la escuela profesional (o, si aún no la tiene, la etiqueta de portada).
+ * La presentación ya no va aquí: es el apartado 01. Solo grupos de investigación (los subgrupos usan Prensa y Literatura).
  */
-export function HeroGrupo({ d }: { d: NonNullable<DatosLanding> }) {
-  const { identidad: id, editorial, grupo } = d
+export function HeroGrupo({ d, subgrupos }: { d: NonNullable<DatosLanding>; subgrupos: EntradaDirectorio['subgrupos'] }) {
+  const { identidad: id, editorial, grupo, investigacion } = d
   const linea = etiquetaEscuela(grupo.escuela) || editorial.etiqueta
   return (
     <section id="inicio" className={`oscuro ${h.hero}`}>
       <div className={h.inner}>
         <div className={h.texto}>
-          {(linea || grupo.padre) && (
+          {linea && (
             <p className={h.kicker}>
-              {linea && <span>{linea}</span>}
-              {grupo.padre && (
-                <span className={h.padre}>
-                  {linea && '· '}Subgrupo de <Link href={`/${grupo.padre.ruta}`}>{grupo.padre.nombre}</Link>
-                </span>
-              )}
+              <span>{linea}</span>
             </p>
           )}
           <h1 className={h.h1}>{id.nombre}</h1>
           {id.lema && <p className={h.nombre}>{id.lema}</p>}
-          {editorial.texto && <p className={h.presentacion}>{editorial.texto}</p>}
           <div className={h.botones}>
             <a href="#colaborar" className={h.oro}>
-              Colaborar con el grupo
+              Contactar al grupo
             </a>
-            <a href="#actividades" className={h.contorno}>
-              Ver actividades
-            </a>
+            {investigacion.lineas.length > 0 && (
+              <a href="#lineas" className={h.contorno}>
+                Líneas de investigación
+              </a>
+            )}
+            {subgrupos.length > 0 && <MenuSubgrupos sigla={id.nombre} subgrupos={subgrupos.map((s) => ({ ruta: s.ruta, nombre: s.cabecera, lema: s.lema }))} />}
           </div>
         </div>
         <figure className={h.figura}>

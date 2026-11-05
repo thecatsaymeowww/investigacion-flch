@@ -441,7 +441,14 @@ try {
     const pagT = await fetch(`${BASE}/litartmo/${MARCA}`)
     ok('subgrupo temporal: 200 en su ruta, con su contenido', pagT.status === 200 && (await pagT.text()).includes(`Integrante ${MARCA}`), `HTTP ${pagT.status}`)
     ok('archivo del subgrupo temporal: 200', (await fetch(`${BASE}/litartmo/${MARCA}/archivo`)).status === 200)
-    ok('la landing de LITARTMO (demo) no muestra contenido de sus subgrupos', !(await (await fetch(`${BASE}/litartmo`)).text()).includes(MARCA))
+    // La Plantilla Grupo lista los subgrupos en el hero (menú «Subgrupos»: cabecera, lema y enlace, datos públicos del
+    // directorio). Lo que no puede aparecer en la landing del padre es el CONTENIDO del subgrupo.
+    const htmlL = await (await fetch(`${BASE}/litartmo`)).text()
+    ok(
+      'la landing de LITARTMO (demo) no muestra contenido de sus subgrupos',
+      ['Integrante', 'Publicación', 'Actividad', 'Evento', 'Titular', 'Remitente'].every((p) => !htmlL.includes(`${p} ${MARCA}`)),
+    )
+    ok('la landing de LITARTMO (demo) enlaza su subgrupo desde el menú «Subgrupos»', htmlL.includes(`href="/litartmo/${MARCA}"`))
     const pub = await fetch(`${BASE}/api/media/file/${encodeURIComponent(exigir(mediaT.filename, 'el nombre del archivo temporal'))}`)
     ok('archivo usado por contenido publicado: accesible', pub.status === 200, `HTTP ${pub.status}`)
     const priv = await fetch(`${BASE}/api/media/file/${encodeURIComponent(exigir(mediaB.filename, 'el nombre del archivo temporal'))}`)
