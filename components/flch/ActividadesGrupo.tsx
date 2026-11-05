@@ -19,7 +19,7 @@ export function ActividadesGrupo({ actividades }: { actividades: NonNullable<Dat
     <Seccion id="actividades" titulo="Actividades destacadas">
       <div className={s.act}>
         <article className={s.principal}>
-          <Foto img={d.imagen} alt={d.titulo} pista="foto · actividad principal" className={s.foto} sizes="(max-width: 900px) 100vw, 60vw" />
+          <Foto img={d.imagen} alt={d.titulo} sigla={d.tipo} className={s.foto} sizes="(max-width: 900px) 100vw, 60vw" />
           <div className={s.cuerpo}>
             <div className={s.meta}>
               <span className={s.badge}>Lo más reciente</span>

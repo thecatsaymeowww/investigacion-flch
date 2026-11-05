@@ -26,7 +26,14 @@ export default buildConfig({
   admin: {
     user: Usuarios.slug,
     importMap: { baseDir: dirname },
-    meta: { titleSuffix: ' · Plataforma de grupos' },
+    // Identidad textual (etapa 4.1, D7): solo metadatos. El logo y el icono del menú exigen componentes propios y
+    // regenerar importMap.js, fuera del alcance de esta fase.
+    meta: {
+      titleSuffix: ' · FLCH · Grupos de investigación',
+      description: 'Panel de edición de los grupos de investigación de la Facultad de Letras y Ciencias Humanas (UNMSM).',
+    },
+    // Tema claro fijo, coherente con el sitio público (sin selector claro/oscuro en la cuenta).
+    theme: 'light',
     // Sin Gravatar (por defecto en Payload): el panel enviaba a www.gravatar.com un hash del correo de cada usuario.
     avatar: 'default',
   },

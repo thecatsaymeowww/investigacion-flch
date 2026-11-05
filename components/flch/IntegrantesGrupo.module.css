@@ -92,7 +92,7 @@
   box-shadow: var(--sombra-tarjeta);
 }
 .ficha::backdrop {
-  background: rgba(12, 39, 66, 0.45);
+  background: rgba(16, 28, 56, 0.45);
 }
 .ficha[open] {
   animation: entrar 0.12s ease-out;

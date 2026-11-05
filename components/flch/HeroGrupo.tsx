@@ -39,7 +39,7 @@ export function HeroGrupo({ d }: { d: NonNullable<DatosLanding> }) {
           </div>
         </div>
         <figure className={h.figura}>
-          <Foto img={editorial.foto} pista={`foto del grupo · ${id.nombre}`} className={h.foto} prioridad />
+          <Foto img={editorial.foto} sigla={id.nombre} className={h.foto} prioridad />
           {(editorial.pie || editorial.credito) && (
             <figcaption className={h.pie}>
               {editorial.pie}

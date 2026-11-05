@@ -1,0 +1,60 @@
+/* Franja institucional de Prensa: tinta sobre papel invertida, como el pie; sin radios ni sombras. */
+.franja {
+  background: var(--tinta);
+  color: var(--papel);
+}
+.inner {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: 7px var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--f-etiqueta);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.franja a {
+  color: var(--papel);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.franja a:hover {
+  color: var(--footer-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.franja a:focus-visible {
+  outline: 2px solid var(--papel);
+  outline-offset: 2px;
+}
+.facultad {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.corto {
+  display: none;
+}
+.directorio {
+  flex: none;
+}
+@media (max-width: 600px) {
+  /* Oculta a la vista, no a los lectores de pantalla (como .sr-only) */
+  .largo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .corto {
+    display: inline;
+  }
+}

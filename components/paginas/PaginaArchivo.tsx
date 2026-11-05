@@ -8,6 +8,7 @@ import h from '@/components/flch/CabeceraArchivo.module.css'
 import { NavGrupo } from '@/components/flch/NavGrupo'
 import { Pie } from '@/components/flch/Pie'
 import { Footer } from '@/components/landing/Footer'
+import { FranjaInstitucional } from '@/components/landing/FranjaInstitucional'
 import { Nav } from '@/components/landing/Nav'
 import { TemaFlch } from '@/components/temas/TemaFlch'
 import { TemaPrensa } from '@/components/temas/TemaPrensa'
@@ -62,6 +63,7 @@ function ArchivoPrensa({ d }: { d: NonNullable<DatosLanding> }) {
   const id = d.identidad
   return (
     <TemaPrensa>
+      <FranjaInstitucional />
       <Nav ruta={d.grupo.ruta} nombre={id.nombre} padre={d.grupo.padre} pagina="archivo" />
       <main className="contenedor" style={{ paddingBottom: 72 }}>
         <header style={{ paddingTop: 28 }}>

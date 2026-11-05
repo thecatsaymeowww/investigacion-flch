@@ -52,11 +52,11 @@
   color: var(--ocre);
 }
 
-/* Imagen o, si no hay, recuadro rayado con su pista */
+/* Imagen o, si no hay, bloque liso con la sigla (las dimensiones las fija quien lo usa) */
 .foto {
   position: relative;
   overflow: hidden;
-  background: var(--rayado);
+  background: var(--sin-foto);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,11 +68,19 @@
   height: 100%;
   object-fit: cover;
 }
-.pista {
-  font: 500 10.5px var(--f-mono);
-  color: var(--pista);
-  background: #f6f7f9;
-  padding: 3px 7px;
+/* El tamaño de la sigla sigue al ancho del bloque (consultas de contenedor), no al de la ventana. */
+.sinFoto {
+  container-type: inline-size;
+}
+.sigla {
+  max-width: 100%;
+  padding: 0 8%;
+  font: 500 clamp(18px, 13cqi, 72px) / 1.05 var(--f-serif);
+  letter-spacing: 0.02em;
+  text-align: center;
+  overflow-wrap: anywhere;
+  color: var(--azul);
+  opacity: 0.85;
 }
 
 .vacio {

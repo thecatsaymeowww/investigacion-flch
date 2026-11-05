@@ -13,12 +13,14 @@ import { IntegrantesGrupo } from '@/components/flch/IntegrantesGrupo'
 import { NavGrupo } from '@/components/flch/NavGrupo'
 import { Pie } from '@/components/flch/Pie'
 import { PublicacionesGrupo } from '@/components/flch/PublicacionesGrupo'
+import { SubgruposGrupo } from '@/components/flch/SubgruposGrupo'
 import { Actividades } from '@/components/landing/Actividades'
 import { Agenda } from '@/components/landing/Agenda'
 import { Aliados } from '@/components/landing/Aliados'
 import { Cifras } from '@/components/landing/Cifras'
 import { Colaborar } from '@/components/landing/Colaborar'
 import { Footer } from '@/components/landing/Footer'
+import { FranjaInstitucional } from '@/components/landing/FranjaInstitucional'
 import { Galeria } from '@/components/landing/Galeria'
 import { Hero } from '@/components/landing/Hero'
 import { Integrantes } from '@/components/landing/Integrantes'
@@ -27,7 +29,7 @@ import { Publicaciones } from '@/components/landing/Publicaciones'
 import { TemaFlch } from '@/components/temas/TemaFlch'
 import { TemaPrensa } from '@/components/temas/TemaPrensa'
 import { emitirMarca } from '@/lib/antispam'
-import { obtenerLanding, type DatosLanding } from '@/lib/cms'
+import { listarGrupos, obtenerLanding, type DatosLanding, type EntradaDirectorio } from '@/lib/cms'
 import { etiquetaEscuela } from '@/lib/escuelas'
 import { usaTemaPrensa } from '@/lib/temas'
 import { hoyLima } from '@/lib/utils'
@@ -44,7 +46,16 @@ export async function metadatosLanding(ruta: string): Promise<Metadata> {
 export async function PaginaLanding({ ruta }: { ruta: string }) {
   const d = await obtenerLanding(ruta)
   if (!d) notFound()
-  return usaTemaPrensa(d.grupo.ruta) ? <LandingPrensa d={d} /> : <LandingFlch d={d} />
+  if (usaTemaPrensa(d.grupo.ruta)) return <LandingPrensa d={d} />
+  return <LandingFlch d={d} subgrupos={d.grupo.padre ? [] : await subgruposDe(d.grupo.ruta)} />
+}
+
+/**
+ * Subgrupos publicados de un grupo principal, tomados del directorio ya calculado (lib/cms, listarGrupos: lectura
+ * pública con overrideAccess: false, solo grupos activos con landing publicada). Sin consultas ni relaciones nuevas.
+ */
+async function subgruposDe(ruta: string) {
+  return (await listarGrupos()).find((g) => g.ruta === ruta)?.subgrupos ?? []
 }
 
 /** Formulario de colaboración: el grupo sale de la ruta ligada en el servidor, nunca del cliente. */
@@ -66,7 +77,7 @@ const propsColaborar = (d: NonNullable<DatosLanding>) => ({
 })
 
 /** Plantilla Grupo (Claude Design): la de todos los grupos salvo los de tema propio. */
-function LandingFlch({ d }: { d: NonNullable<DatosLanding> }) {
+function LandingFlch({ d, subgrupos }: { d: NonNullable<DatosLanding>; subgrupos: EntradaDirectorio['subgrupos'] }) {
   return (
     <TemaFlch>
       <Cabecera />
@@ -74,6 +85,7 @@ function LandingFlch({ d }: { d: NonNullable<DatosLanding> }) {
       <HeroGrupo d={d} />
       <main className={`${b.contenedor} ${b.principal}`}>
         <CifrasGrupo cifras={d.cifras} />
+        <SubgruposGrupo subgrupos={subgrupos} />
         <IntegrantesGrupo intro={d.integrantesIntro} integrantes={d.integrantes} />
         <AliadosGrupo aliados={d.aliados} />
         <PublicacionesGrupo ruta={d.grupo.ruta} publicaciones={d.publicaciones} />
@@ -87,11 +99,12 @@ function LandingFlch({ d }: { d: NonNullable<DatosLanding> }) {
   )
 }
 
-/** Diseño de periódico de Prensa y Literatura, sin cambios. */
+/** Diseño de periódico de Prensa y Literatura, sin cambios salvo la franja institucional (etapa 4.1, D6). */
 function LandingPrensa({ d }: { d: NonNullable<DatosLanding> }) {
   const id = d.identidad
   return (
     <TemaPrensa>
+      <FranjaInstitucional />
       <Nav
         ruta={d.grupo.ruta}
         nombre={id.nombre}

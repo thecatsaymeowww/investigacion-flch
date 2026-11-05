@@ -47,8 +47,10 @@ img {
    Los componentes usan sus módulos en components/flch/.
    ========================================================== */
 .tema-flch {
-  --azul: #143b63;
-  --azul-osc: #0c2742;
+  /* Azul institucional FLCH-UNMSM (etapa 4.1; antes #143b63 de la referencia) y su tono oscuro derivado.
+     Contraste: blanco sobre --azul 13,9:1; oro sobre --azul 6,2:1; --azul-osc sobre oro 7,5:1. */
+  --azul: #192b52;
+  --azul-osc: #101c38;
   --oro: #d9a53a;
   --oro-claro: #e8c37a;
   /* Ocre de la referencia (#9a6b12) oscurecido para AA sobre el fondo y la crema (4,29 → 5,12). */
@@ -68,7 +70,9 @@ img {
   --sobre-azul-2: #c9d4e2;
   --pista: #6b7686;
   --rayado: repeating-linear-gradient(135deg, #eef1f5 0 8px, #e5e9ef 8px 16px);
-  --rayado-azul: repeating-linear-gradient(135deg, #1d4774 0 8px, #1a426d 8px 16px);
+  /* Bloque liso de las imágenes de grupo que faltan (Foto): claro sobre fondo claro, algo más claro que el azul en el hero. */
+  --sin-foto: #e7ebf2;
+  --sin-foto-azul: #22365f;
 
   --f-serif: var(--fuente-newsreader), Georgia, serif;
   --f-sans: var(--fuente-etiqueta), system-ui, sans-serif;
@@ -79,8 +83,8 @@ img {
   --nav-alto: 56px;
   --radio: 8px;
   --radio-s: 6px;
-  --sombra-tarjeta: 0 10px 28px rgba(20, 59, 99, 0.14);
-  --sombra-portada: 0 10px 24px rgba(20, 59, 99, 0.12);
+  --sombra-tarjeta: 0 10px 28px rgba(25, 43, 82, 0.14);
+  --sombra-portada: 0 10px 24px rgba(25, 43, 82, 0.12);
 
   position: relative;
   min-height: 100vh;

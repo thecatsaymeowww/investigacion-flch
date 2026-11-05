@@ -7,11 +7,8 @@ export function Cabecera() {
   return (
     <header className={`oscuro ${c.cabecera}`}>
       <div className={c.inner}>
+        {/* Sin escudo hasta contar con el archivo oficial y su permiso de uso: solo la marca textual (etapa 4.1, D2). */}
         <a href={SITIO_FLCH} className={c.marca}>
-          {/* Recuadro del escudo como en la referencia: falta el archivo oficial del escudo. */}
-          <span className={c.escudo} aria-hidden="true">
-            escudo
-          </span>
           <span className={c.textos}>
             <span className={c.facultad}>Facultad de Letras y Ciencias Humanas</span>
             <span className={c.universidad}>Universidad Nacional Mayor de San Marcos</span>

@@ -141,7 +141,8 @@ export const Usuarios: CollectionConfig = {
 export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: 'Archivo', plural: 'Archivos' },
-  admin: { useAsTitle: 'alt', defaultColumns: ['filename', 'alt', 'visibilidad'] },
+  // Grupo del menú del panel (etapa 4.1, D7): junto al contenido del grupo, al que pertenece cada archivo.
+  admin: { useAsTitle: 'alt', defaultColumns: ['filename', 'alt', 'visibilidad'], group: 'Contenido del grupo' },
   access: { read: archivoPublicoOPanel, create: usuarioDelPanel, update: usuarioDelPanel, delete: usuarioDelPanel },
   hooks: {
     // Límite por tipo (subfase 5a, lib/archivos.ts): imágenes hasta 5 MB y PDF hasta 20 MB.
@@ -207,7 +208,7 @@ export const Media: CollectionConfig = {
 export const Mensajes: CollectionConfig = {
   slug: 'mensajes',
   labels: { singular: 'Mensaje de contacto', plural: 'Mensajes de contacto' },
-  admin: { useAsTitle: 'nombre', defaultColumns: ['nombre', 'tipo', 'estado', 'duplicadoDe', 'createdAt'] },
+  admin: { useAsTitle: 'nombre', defaultColumns: ['nombre', 'tipo', 'estado', 'duplicadoDe', 'createdAt'], group: 'Contenido del grupo' },
   access: { read: usuarioDelPanel, create: nadie, update: usuarioDelPanel, delete: soloSuperadmin },
   hooks: {
     // La fecha de recepción la pone Payload al crear y no se edita (subfase 2c): sin esto, un PATCH con `createdAt` la

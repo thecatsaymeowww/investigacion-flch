@@ -126,7 +126,7 @@ function Tarjetas({ grupos }: { grupos: EntradaDirectorio[] }) {
       {grupos.map((g) => {
         const cuerpo = (
           <>
-            <Foto img={g.foto} alt="" pista={`foto o logo · ${g.cabecera}`} className={s.foto} sizes="(max-width: 700px) 100vw, 33vw" />
+            <Foto img={g.foto} alt="" sigla={g.cabecera} className={s.foto} sizes="(max-width: 700px) 100vw, 33vw" />
             <span className={s.cuerpo}>
               <span className={s.fila}>
                 <span className={s.sigla}>{g.cabecera}</span>

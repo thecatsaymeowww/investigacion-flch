@@ -10,13 +10,16 @@ const accesoEditorial: CollectionConfig['access'] = {
   readVersions: usuarioDelPanel,
 }
 
+/** Grupo del menú lateral del panel para el contenido de cada grupo (etapa 4.1, D7; solo presentación). */
+const GRUPO_PANEL = 'Contenido del grupo'
+
 const urlValida = (value: unknown) =>
   value == null || value === '' || (typeof value === 'string' && /^https?:\/\/\S+$/.test(value)) || 'Debe empezar por http:// o https://'
 
 export const Integrantes: CollectionConfig = {
   slug: 'integrantes',
   labels: { singular: 'Integrante', plural: 'Integrantes' },
-  admin: { useAsTitle: 'nombre', defaultColumns: ['nombre', 'rol', '_status', 'orden'], listSearchableFields: ['nombre', 'rol'] },
+  admin: { useAsTitle: 'nombre', defaultColumns: ['nombre', 'rol', '_status', 'orden'], listSearchableFields: ['nombre', 'rol'], group: GRUPO_PANEL },
   defaultSort: 'orden',
   versions: { drafts: true },
   access: accesoEditorial,
@@ -44,7 +47,7 @@ export const Integrantes: CollectionConfig = {
 export const Publicaciones: CollectionConfig = {
   slug: 'publicaciones',
   labels: { singular: 'Publicación', plural: 'Publicaciones' },
-  admin: { useAsTitle: 'titulo', defaultColumns: ['titulo', 'tipo', 'anio', '_status'], listSearchableFields: ['titulo', 'autoria'] },
+  admin: { useAsTitle: 'titulo', defaultColumns: ['titulo', 'tipo', 'anio', '_status'], listSearchableFields: ['titulo', 'autoria'], group: GRUPO_PANEL },
   defaultSort: '-anio',
   versions: { drafts: true },
   access: accesoEditorial,
@@ -72,7 +75,7 @@ export const Publicaciones: CollectionConfig = {
 export const Actividades: CollectionConfig = {
   slug: 'actividades',
   labels: { singular: 'Actividad', plural: 'Actividades' },
-  admin: { useAsTitle: 'titulo', defaultColumns: ['titulo', 'tipo', 'fecha', '_status'], listSearchableFields: ['titulo', 'lugar'] },
+  admin: { useAsTitle: 'titulo', defaultColumns: ['titulo', 'tipo', 'fecha', '_status'], listSearchableFields: ['titulo', 'lugar'], group: GRUPO_PANEL },
   defaultSort: '-fecha',
   versions: { drafts: true },
   access: accesoEditorial,
@@ -103,7 +106,7 @@ export const Actividades: CollectionConfig = {
 export const Eventos: CollectionConfig = {
   slug: 'eventos',
   labels: { singular: 'Evento de agenda', plural: 'Agenda' },
-  admin: { useAsTitle: 'titulo', defaultColumns: ['titulo', 'fecha', 'hora', '_status'] },
+  admin: { useAsTitle: 'titulo', defaultColumns: ['titulo', 'fecha', 'hora', '_status'], group: GRUPO_PANEL },
   defaultSort: 'fecha',
   versions: { drafts: true },
   access: accesoEditorial,
@@ -126,7 +129,7 @@ export const Eventos: CollectionConfig = {
 export const Landing: CollectionConfig = {
   slug: 'landing',
   labels: { singular: 'Landing del grupo', plural: 'Landing del grupo' },
-  admin: { useAsTitle: 'nombre' },
+  admin: { useAsTitle: 'nombre', group: GRUPO_PANEL },
   versions: { drafts: true },
   access: { read: publicadoOPanel, create: usuarioDelPanel, update: usuarioDelPanel, delete: soloSuperadmin, readVersions: usuarioDelPanel },
   hooks: hooksEditoriales([

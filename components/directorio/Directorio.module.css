@@ -8,7 +8,7 @@
   border-bottom: 1px solid var(--borde);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 .filaFiltros {
   display: flex;
@@ -198,9 +198,13 @@
   flex-direction: column;
   transition:
     box-shadow 0.2s,
-    transform 0.2s;
+    transform 0.2s,
+    border-color 0.2s;
 }
-.tarjeta:hover {
+/* Hover y foco con la misma respuesta: borde azul suave y sombra (el anillo de foco lo pone :focus-visible). */
+.tarjeta:hover,
+.tarjeta:has(a:focus-visible) {
+  border-color: var(--sobre-azul-2);
   box-shadow: var(--sombra-tarjeta);
   transform: translateY(-2px);
 }
@@ -219,6 +223,7 @@ a.principal:focus-visible {
 }
 .foto {
   aspect-ratio: 16 / 9;
+  border-bottom: 1px solid var(--borde-suave);
 }
 .cuerpo {
   padding: 14px 16px 16px;
@@ -226,6 +231,9 @@ a.principal:focus-visible {
   flex-direction: column;
   gap: 6px;
   flex: 1;
+}
+a.principal:hover .flecha {
+  transform: translateX(3px);
 }
 .fila {
   display: flex;
@@ -243,6 +251,7 @@ a.principal:focus-visible {
   color: var(--azul);
   font-size: 18px;
   flex: none;
+  transition: transform 0.2s;
 }
 .lema {
   font-size: 13px;
@@ -309,10 +318,13 @@ a.principal:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tarjeta {
+  .tarjeta,
+  .flecha {
     transition: none;
   }
-  .tarjeta:hover {
+  .tarjeta:hover,
+  .tarjeta:has(a:focus-visible),
+  a.principal:hover .flecha {
     transform: none;
   }
 }
