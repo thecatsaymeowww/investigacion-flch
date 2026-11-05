@@ -247,7 +247,7 @@ Reglas para no estropear comandos ni filtrar secretos:
    $t = $t.Replace('CHANGE_ME_APP_PASSWORD', $ClaveApp)
    [IO.File]::WriteAllText("$PWD\.env", $t, (New-Object System.Text.UTF8Encoding $false))
    # La conexión del propietario, en su propio archivo (la app carga todo .env; este no)
-   [IO.File]::WriteAllText("$PWD\.env.migraciones", "DATABASE_URI_MIGRACIONES=postgres://plataforma_owner:$ClaveOwner@127.0.0.1:5434/plataforma`n", (New-Object System.Text.UTF8Encoding $false))
+   [IO.File]::WriteAllText("$PWD\.env.migraciones", "DATABASE_URI_MIGRACIONES=postgres://plataforma_owner:$ClaveOwner@127.0.0.1:5434/giflch`n", (New-Object System.Text.UTF8Encoding $false))
    ```
    Si se cambian `POSTGRES_DB` o `POSTGRES_PORT` en `.env`, ajustar también la base y el puerto en `.env.migraciones`.
 2. `pnpm db:up` y esperar a que `docker compose ps postgres` muestre `(healthy)`. La imagen crea la base `POSTGRES_DB` con el superusuario.
