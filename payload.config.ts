@@ -26,8 +26,15 @@ export default buildConfig({
   admin: {
     user: Usuarios.slug,
     importMap: { baseDir: dirname },
-    // Identidad textual (etapa 4.1, D7): solo metadatos. El logo y el icono del menú exigen componentes propios y
-    // regenerar importMap.js, fuera del alcance de esta fase.
+    // Identidad textual (etapa 4.1, D7) y marca del panel (F15): logo de la pantalla de acceso e icono del menú, solo
+    // texto (components/admin/Marca.tsx). Cualquier cambio de estos componentes exige regenerar importMap.js
+    // (`pnpm payload generate:importmap`).
+    components: {
+      graphics: {
+        Logo: '/components/admin/Marca#Logo',
+        Icon: '/components/admin/Marca#Icon',
+      },
+    },
     meta: {
       titleSuffix: ' · FLCH · Grupos de investigación',
       description: 'Panel de edición de los grupos de investigación de la Facultad de Letras y Ciencias Humanas (UNMSM).',
