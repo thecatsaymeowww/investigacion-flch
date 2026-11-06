@@ -28,6 +28,17 @@ function imagen(m: number | Media | null | undefined): Imagen {
   return { src: m.sizes?.media?.url ?? m.url, alt: m.alt, srcSet: srcSetDe(m.sizes) }
 }
 
+/**
+ * Imagen sustituta de los grupos de investigación sin foto de portada: la fachada de la Facultad (imagen de la web de
+ * la FLCH, IMAGEN-FONDO-WEB.jpeg, 06-11-2026), en public/img. Solo en el hero y en la tarjeta del directorio de los
+ * grupos (no de los subgrupos); en cuanto el grupo tiene su foto de portada, se usa la suya.
+ */
+const FOTO_GENERICA: NonNullable<Imagen> = {
+  src: '/img/facultad-fachada-960.webp',
+  srcSet: '/img/facultad-fachada-480.webp 480w, /img/facultad-fachada-960.webp 960w, /img/facultad-fachada-1600.webp 1600w',
+  alt: 'Fachada de la Facultad de Letras y Ciencias Humanas de la UNMSM',
+}
+
 const parrafos = (texto: string | null | undefined) =>
   (texto ?? '')
     .split(/\n\s*\n/)
@@ -105,7 +116,7 @@ async function leerLanding(grupo: Grupo) {
       etiqueta: l.editorialEtiqueta ?? '',
       titular: l.titular,
       texto: l.texto,
-      foto: imagen(l.fotoHero),
+      foto: imagen(l.fotoHero) ?? (esSubgrupo ? null : FOTO_GENERICA),
       pie: l.fotoPie ?? '',
       credito: l.fotoCredito ?? '',
     },
@@ -243,7 +254,7 @@ export const listarGrupos = unstable_cache(
     const landings = (await payload.find({ collection: 'landing', ...publico, where: { _status: { equals: 'published' } }, limit: 1000, depth: 1 }))
       .docs as Landing[]
     const landingDe = new Map(landings.map((l) => [typeof l.grupo === 'object' ? l.grupo?.id : l.grupo, l]))
-    const entrada = (g: Grupo, escuelaPadre: string | null = null) => {
+    const entrada = (g: Grupo, escuelaPadre: string | null = null, subgrupo = false) => {
       const l = landingDe.get(g.id)
       return {
         ruta: g.ruta ?? g.slug,
@@ -251,7 +262,7 @@ export const listarGrupos = unstable_cache(
         cabecera: l?.nombre ?? g.nombre,
         lema: l?.lema ?? '',
         escuela: g.escuela ?? escuelaPadre,
-        foto: imagen(l?.fotoHero),
+        foto: imagen(l?.fotoHero) ?? (subgrupo ? null : FOTO_GENERICA),
         conLanding: Boolean(l),
       }
     }
@@ -262,7 +273,7 @@ export const listarGrupos = unstable_cache(
         ...entrada(g),
         subgrupos: grupos
           .filter((s) => padreId(s) === g.id)
-          .map((s) => entrada(s, g.escuela ?? null))
+          .map((s) => entrada(s, g.escuela ?? null, true))
           .filter((s) => s.conLanding),
       }))
       .filter((g) => g.conLanding || g.subgrupos.length > 0)
