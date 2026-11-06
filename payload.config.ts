@@ -41,8 +41,9 @@ export default buildConfig({
     },
     // Tema oscuro fijo, por decisión del usuario (06-11-2026); sin selector claro/oscuro en la cuenta.
     theme: 'dark',
-    // Sin Gravatar (por defecto en Payload): el panel enviaba a www.gravatar.com un hash del correo de cada usuario.
-    avatar: 'default',
+    // Gravatar en el círculo de la cuenta, por decisión del usuario (06-11-2026), que acepta el efecto de privacidad: el
+    // navegador pide a www.gravatar.com la imagen con el hash del correo de cada usuario (solo en el panel, no en el sitio).
+    avatar: 'gravatar',
   },
   // Los campos de texto solo admiten cadenas, también en borradores: ver lib/tipos-texto.ts.
   collections: [Landing, Integrantes, Publicaciones, Actividades, Eventos, Media, Mensajes, Grupos, Usuarios, RegistroCambios].map(conTiposDeTexto),
