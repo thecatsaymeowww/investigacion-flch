@@ -3,9 +3,11 @@
  * que la cabecera del sitio (components/flch/Cabecera: filete dorado a la izquierda, azul institucional). Sin imágenes
  * ni fuentes externas: el escudo se retiró en la etapa 4.1 (D2). Se registran en payload.config.ts
  * (`admin.components.graphics`) y llegan al panel por app/(payload)/admin/importMap.js (regenerado).
- * Colores como en app/(sitio)/globals.css (.tema-flch): azul #192b52 (13,9:1 sobre blanco) y oro #d9a53a (decorativo).
+ * Colores como en app/(sitio)/globals.css (.tema-flch): azul #192b52 y oro #d9a53a (decorativo). El panel usa el tema
+ * oscuro: el texto del logo toma el color de texto del tema (--theme-text) para leerse sobre el fondo oscuro.
  */
-const AZUL = '#192b52'
+import m from './Marca.module.css'
+
 const ORO = '#d9a53a'
 
 export function Logo() {
@@ -17,7 +19,7 @@ export function Logo() {
         gap: 4,
         padding: '2px 0 2px 14px',
         borderLeft: `3px solid ${ORO}`,
-        color: AZUL,
+        color: 'var(--theme-text)',
         textAlign: 'left',
       }}
     >
@@ -32,25 +34,10 @@ export function Logo() {
   )
 }
 
+/** Icono de la miga de pan del panel. Sus estilos y el ajuste de la caja de Payload están en Marca.module.css. */
 export function Icon() {
   return (
-    <span
-      aria-label="FLCH"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 24,
-        padding: '0 6px',
-        borderRadius: 3,
-        background: AZUL,
-        color: '#fff',
-        fontSize: 11,
-        fontWeight: 700,
-        letterSpacing: '0.06em',
-        lineHeight: 1,
-      }}
-    >
+    <span aria-label="FLCH" className={m.icono}>
       FLCH
     </span>
   )

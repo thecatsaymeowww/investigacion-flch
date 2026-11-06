@@ -39,8 +39,8 @@ export default buildConfig({
       titleSuffix: ' · FLCH · Grupos de investigación',
       description: 'Panel de edición de los grupos de investigación de la Facultad de Letras y Ciencias Humanas (UNMSM).',
     },
-    // Tema claro fijo, coherente con el sitio público (sin selector claro/oscuro en la cuenta).
-    theme: 'light',
+    // Tema oscuro fijo, por decisión del usuario (06-11-2026); sin selector claro/oscuro en la cuenta.
+    theme: 'dark',
     // Sin Gravatar (por defecto en Payload): el panel enviaba a www.gravatar.com un hash del correo de cada usuario.
     avatar: 'default',
   },
