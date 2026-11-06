@@ -11,7 +11,6 @@ export function PublicacionesGrupo({ ruta, publicaciones }: { ruta: string; publ
   return (
     <SeccionGrupo
       id="publicaciones"
-
       titulo="Publicaciones"
       resumen={publicaciones.length > 0 ? cuenta(publicaciones.length, 'publicación registrada', 'publicaciones registradas') : undefined}
       extra={
