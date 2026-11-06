@@ -11,8 +11,6 @@ const ENLACES: [string, string][] = [
   ['infraestructura', 'Infraestructura'],
   ['miembros', 'Miembros'],
   ['publicaciones', 'Publicaciones'],
-  ['actividades', 'Actividades'],
-  ['agenda', 'Agenda'],
   ['galeria', 'Galería'],
 ]
 

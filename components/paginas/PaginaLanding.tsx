@@ -1,9 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { enviarPropuesta } from '@/app/(sitio)/[grupo]/acciones'
-import { ActividadesGrupo } from '@/components/flch/ActividadesGrupo'
-import { AgendaGrupo } from '@/components/flch/AgendaGrupo'
-import { AliadosGrupo } from '@/components/flch/AliadosGrupo'
 import b from '@/components/flch/base.module.css'
 import { Cabecera } from '@/components/flch/Cabecera'
 import { CifrasGrupo } from '@/components/flch/CifrasGrupo'
@@ -83,8 +80,9 @@ const propsColaborar = (d: NonNullable<DatosLanding>) => ({
  * Plantilla Grupo (Claude Design, redesign/Plantilla Grupo.dc.html) para los grupos de investigación. Apartados
  * numerados como en la referencia; los que no tienen datos (objetivos, servicios, líneas) no se muestran y la
  * numeración sigue a los visibles. Infraestructura se muestra siempre, con el aviso de «no hay registros» del diseño.
- * Las secciones propias de la plataforma (aliados, publicaciones, actividades, agenda, galería) van entre Miembros y
- * Contactos como apartados numerados del mismo diseño; aliados y galería, solo si tienen contenido.
+ * Tras Miembros van Publicaciones y Galería (esta solo con contenido), como apartados numerados del mismo diseño, y
+ * Contactos. Los grupos de investigación no muestran aliados, actividades ni agenda (decisión del 06-11-2026); los
+ * subgrupos (plantilla Prensa) los conservan.
  */
 function LandingFlch({ d, subgrupos }: { d: NonNullable<DatosLanding>; subgrupos: EntradaDirectorio['subgrupos'] }) {
   const inv = d.investigacion
@@ -104,10 +102,7 @@ function LandingFlch({ d, subgrupos }: { d: NonNullable<DatosLanding>; subgrupos
         {inv.lineas.length > 0 && <Lineas n={sig()} lineas={inv.lineas} />}
         <Infraestructura n={sig()} inv={inv} />
         <IntegrantesGrupo n={sig()} intro={d.integrantesIntro} integrantes={d.integrantes} />
-        {d.aliados.length > 0 && <AliadosGrupo n={sig()} aliados={d.aliados} />}
         <PublicacionesGrupo n={sig()} ruta={d.grupo.ruta} publicaciones={d.publicaciones} />
-        <ActividadesGrupo n={sig()} actividades={d.actividades} />
-        <AgendaGrupo n={sig()} eventos={d.eventos} hoyServidor={hoyLima()} />
         {d.galeria.length > 0 && <GaleriaGrupo n={sig()} galeria={d.galeria} />}
         <Colaborar
           {...propsColaborar(d)}
