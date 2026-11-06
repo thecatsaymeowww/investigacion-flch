@@ -5,6 +5,7 @@
  * estudios-andinos-demo (B). Crea sus propios temporales, con una marca única: un segundo subgrupo de LITARTMO (T)
  * con su landing publicada y su editor (contraseña solo en memoria); en T, un integrante, una publicación, una
  * actividad, un evento, un mensaje y un archivo; en B, un mensaje y un archivo (imágenes generadas en memoria).
+ * B (grupo de investigación) publica noticias; T y S (subgrupos), actividades y agenda: también se comprueba esa regla.
  * - Cada comprobación de aislamiento tiene su control positivo: el dueño ve su recurso de prueba.
  * - Un rechazo esperado solo cuenta si es un error 4xx de la API (o una respuesta HTTP 4xx). Un 5xx, un error de red
  *   o cualquier otro error es un fallo.
@@ -49,7 +50,7 @@ const rechaza = async (fn: () => Promise<unknown>) => {
     return false
   }
 }
-type Coleccion = 'grupos' | 'usuarios' | 'media' | 'integrantes' | 'publicaciones' | 'actividades' | 'eventos' | 'mensajes' | 'landing'
+type Coleccion = 'grupos' | 'usuarios' | 'media' | 'integrantes' | 'publicaciones' | 'noticias' | 'actividades' | 'eventos' | 'mensajes' | 'landing'
 const temporales: { collection: Coleccion; id: number }[] = []
 /** Comprobación de que una creación se rechaza; si por error se crea, se apunta para borrarla al final. */
 const rechazaCrear = (collection: Coleccion, crear: () => Promise<{ id: number }>) =>
@@ -84,7 +85,7 @@ try {
   const editorL = exigir(await usuario('editor-litartmo@plataforma.local'), 'la cuenta editor-litartmo (pnpm seed)')
   const editorS = exigir(await usuario('editor-subgrupo-demo@plataforma.local'), 'la cuenta editor-subgrupo-demo (pnpm seed)')
   const editorB = exigir(await usuario('editor-demo@plataforma.local'), 'la cuenta editor-demo (pnpm seed)')
-  const deB = async (collection: 'integrantes' | 'publicaciones' | 'actividades' | 'eventos' | 'landing', que: string, estado?: 'draft' | 'published') =>
+  const deB = async (collection: 'integrantes' | 'publicaciones' | 'noticias' | 'landing', que: string, estado?: 'draft' | 'published') =>
     exigir(
       (
         await payload.find({
@@ -100,9 +101,13 @@ try {
   const borradorB = await deB('integrantes', 'un integrante en borrador', 'draft')
   const publicadoB = await deB('integrantes', 'un integrante publicado', 'published')
   const publicacionB = await deB('publicaciones', 'una publicación')
-  const actividadB = await deB('actividades', 'una actividad')
-  const eventoB = await deB('eventos', 'un evento')
+  const noticiaB = await deB('noticias', 'una noticia')
   const landingB = await deB('landing', 'la landing')
+  // La agenda es de los subgrupos: el evento ajeno es el del subgrupo demo (S), de otro grupo que T.
+  const eventoS = exigir(
+    (await payload.find({ collection: 'eventos', where: { grupo: { equals: S.id } }, draft: true, limit: 1, depth: 0 })).docs[0],
+    'un evento del subgrupo demo (pnpm seed)',
+  )
   const integranteS = exigir(
     (await payload.find({ collection: 'integrantes', where: { grupo: { equals: S.id } }, limit: 1 })).docs[0],
     'un integrante del subgrupo demo',
@@ -226,11 +231,11 @@ try {
     mensajesB.docs.some((d) => d.id === mensajeB.id) && mensajesB.docs.every((d) => gid(d) === B.id),
     `${mensajesB.totalDocs} docs`,
   )
-  const porId: [keyof typeof propiosT, number][] = [
+  const porId: ['integrantes' | 'publicaciones' | 'noticias' | 'eventos' | 'mensajes' | 'media', number][] = [
     ['integrantes', borradorB.id],
     ['publicaciones', publicacionB.id],
-    ['actividades', actividadB.id],
-    ['eventos', eventoB.id],
+    ['noticias', noticiaB.id],
+    ['eventos', eventoS.id],
     ['mensajes', mensajeB.id],
     ['media', mediaB.id],
   ]
@@ -245,8 +250,37 @@ try {
     'no edita una publicación del demo',
     await rechaza(() => payload.update({ collection: 'publicaciones', id: publicacionB.id, data: { titulo: 'X' }, ...comoT })),
   )
-  ok('no edita una actividad del demo', await rechaza(() => payload.update({ collection: 'actividades', id: actividadB.id, data: { titulo: 'X' }, ...comoT })))
-  ok('no edita un evento del demo', await rechaza(() => payload.update({ collection: 'eventos', id: eventoB.id, data: { titulo: 'X' }, ...comoT })))
+  ok('no edita una noticia del demo', await rechaza(() => payload.update({ collection: 'noticias', id: noticiaB.id, data: { titulo: 'X' }, ...comoT })))
+  ok('no edita un evento del subgrupo demo', await rechaza(() => payload.update({ collection: 'eventos', id: eventoS.id, data: { titulo: 'X' }, ...comoT })))
+
+  // Regla de plantilla (06-11-2026), con permisos completos: la rechaza la validación, no el control de acceso.
+  ok(
+    'plantilla: un subgrupo no admite noticias',
+    await rechazaCrear('noticias', () =>
+      payload.create({
+        collection: 'noticias',
+        data: { grupo: T.id, titulo: `Noticia ${MARCA}`, fecha: '2026-10-01', resumen: 'No debe crearse.', ...publicado },
+      }),
+    ),
+  )
+  ok(
+    'plantilla: un grupo de investigación no admite actividades',
+    await rechazaCrear('actividades', () =>
+      payload.create({
+        collection: 'actividades',
+        data: { grupo: B.id, tipo: 'Taller', titulo: `Actividad ${MARCA}`, fecha: '2026-10-01', lugar: 'Sala', resumen: 'No debe crearse.', ...publicado },
+      }),
+    ),
+  )
+  ok(
+    'plantilla: un grupo de investigación no admite eventos',
+    await rechazaCrear('eventos', () =>
+      payload.create({
+        collection: 'eventos',
+        data: { grupo: B.id, titulo: `Evento ${MARCA}`, fecha: '2026-10-20', hora: '16:00', tipo: 'Reunión', lugar: 'Sala', ...publicado },
+      }),
+    ),
+  )
   ok('no edita un mensaje del demo', await rechaza(() => payload.update({ collection: 'mensajes', id: mensajeB.id, data: { estado: 'atendido' }, ...comoT })))
   ok('no borra un integrante del demo', await rechaza(() => payload.delete({ collection: 'integrantes', id: publicadoB.id, ...comoT })))
   ok(

@@ -14,7 +14,7 @@ import { exigirConexionDeAplicacion } from './scripts/guardia-conexion'
 import { protegerMigraciones } from './scripts/guardia-migraciones'
 import { confiarEnProxy, secretoPayload, urlDelSitio } from './lib/entorno'
 import { conTiposDeTexto } from './lib/tipos-texto'
-import { Actividades, Eventos, Integrantes, Landing, Publicaciones } from './payload/collections/contenido'
+import { Actividades, Eventos, Integrantes, Landing, Noticias, Publicaciones } from './payload/collections/contenido'
 import { Grupos, Media, Mensajes, RegistroCambios, Usuarios } from './payload/collections/plataforma'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -46,7 +46,7 @@ export default buildConfig({
     avatar: 'gravatar',
   },
   // Los campos de texto solo admiten cadenas, también en borradores: ver lib/tipos-texto.ts.
-  collections: [Landing, Integrantes, Publicaciones, Actividades, Eventos, Media, Mensajes, Grupos, Usuarios, RegistroCambios].map(conTiposDeTexto),
+  collections: [Landing, Integrantes, Publicaciones, Noticias, Actividades, Eventos, Media, Mensajes, Grupos, Usuarios, RegistroCambios].map(conTiposDeTexto),
   // Requerido por Payload aunque el modelo no usa texto enriquecido (D16: texto plano/Markdown).
   editor: lexicalEditor(),
   i18n: { supportedLanguages: { es }, fallbackLanguage: 'es' },
@@ -98,6 +98,7 @@ export default buildConfig({
         landing: { isGlobal: true },
         integrantes: {},
         publicaciones: {},
+        noticias: {},
         actividades: {},
         eventos: {},
         media: {},

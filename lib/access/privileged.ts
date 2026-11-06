@@ -131,6 +131,7 @@ export const CAMPOS_PUBLICOS: Record<string, Referencia[]> = {
     { campo: 'pdf', destino: 'media' },
   ],
   actividades: [{ campo: 'imagen', destino: 'media' }],
+  noticias: [{ campo: 'imagen', destino: 'media' }],
   landing: [
     { campo: 'fotoHero', destino: 'media' },
     { campo: 'imagen', destino: 'media', enArray: 'galeria' },
@@ -295,15 +296,44 @@ export const calcularPlantilla = async ({ data, req }: { data?: Doc; req: Payloa
  * los suyos se conservan sin mostrarse.
  */
 export function soloEnGrupos(campos: string[]): CollectionBeforeValidateHook {
+  return conservarCampos(campos, true)
+}
+
+/**
+ * Lo inverso: campos que solo usan los subgrupos (plantilla Prensa), como los aliados de la landing. En un grupo de
+ * investigación no se escriben por ninguna vía; lo que ya hubiera se conserva sin mostrarse (decisión del 06-11-2026).
+ */
+export function soloEnSubgrupos(campos: string[]): CollectionBeforeValidateHook {
+  return conservarCampos(campos, false)
+}
+
+/** Sustituye los `campos` por los que ya había (nada, en un alta) cuando el grupo dueño NO es de la plantilla que los usa. */
+function conservarCampos(campos: string[], deGrupos: boolean): CollectionBeforeValidateHook {
   return async ({ data, originalDoc, req }) => {
     if (!data) return data
-    if (!(await esSubgrupo(req, data.grupo ?? originalDoc?.grupo))) return data
+    const sub = await esSubgrupo(req, data.grupo ?? originalDoc?.grupo)
+    if (sub == null || sub !== deGrupos) return data
     const limpio: Record<string, unknown> = { ...data }
     for (const c of campos) {
       if (originalDoc && c in originalDoc) limpio[c] = originalDoc[c]
       else delete limpio[c]
     }
     return limpio
+  }
+}
+
+/**
+ * Colecciones propias de una plantilla (06-11-2026): las noticias, solo de los grupos de investigación; las actividades
+ * y la agenda, solo de los subgrupos (plantilla Prensa). Crear o editar un documento en un grupo de la otra plantilla se
+ * rechaza con un error de validación, por cualquier vía (panel o API). Borrar sigue permitido.
+ */
+export function exigirPlantilla(plantilla: 'grupo' | 'subgrupo', mensaje: string): CollectionBeforeValidateHook {
+  return async ({ collection, data, originalDoc, req }) => {
+    if (!data) return data
+    const sub = await esSubgrupo(req, data.grupo ?? originalDoc?.grupo)
+    if (sub != null && sub !== (plantilla === 'subgrupo'))
+      throw new ValidationError({ collection: collection.slug, errors: [{ message: mensaje, path: 'grupo' }] }, req.t)
+    return data
   }
 }
 
@@ -373,7 +403,7 @@ export async function crearMensajeContacto(
 }
 
 /** Colecciones con campo `grupo` del plugin multi-tenant (payload.config.ts). */
-const CON_GRUPO = ['landing', 'integrantes', 'publicaciones', 'actividades', 'eventos', 'media', 'mensajes'] as const
+const CON_GRUPO = ['landing', 'integrantes', 'publicaciones', 'noticias', 'actividades', 'eventos', 'media', 'mensajes'] as const
 
 /** Ids de los bloqueos de edición cuyo documento es de un grupo del usuario (o es su propia cuenta o uno de sus grupos). */
 async function bloqueosVisibles(req: PayloadRequest): Promise<number[]> {

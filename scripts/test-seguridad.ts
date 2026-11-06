@@ -237,15 +237,33 @@ try {
       r1.status === 201 && g1?.nombre === textos.nombre && g1?.rol === textos.rol && g1?.bio === textos.bio,
       `HTTP ${r1.status}`,
     )
-    const aliadosAntes = (landing.aliados ?? []).map((a) => ({ nombre: a.nombre, url: a.url, logo: a.logo }))
+    // B es un grupo de investigación: su array propio es «Servicios» (los aliados son solo de los subgrupos desde el
+    // 06-11-2026 y en un grupo se ignoran).
+    const serviciosAntes = (landing.servicios ?? []).map((s) => ({ servicio: s.servicio }))
     const r2 = await fetch(`${BASE}/api/landing/${landing.id}?draft=true`, {
       method: 'PATCH',
       headers: { ...auth, ...json },
-      body: JSON.stringify({ aliados: [...aliadosAntes, { nombre: `${MARCA} aliado`, url: 'https://ejemplo.invalid' }] }),
+      body: JSON.stringify({ servicios: [...serviciosAntes, { servicio: `${MARCA} servicio` }] }),
     })
     const l2 = await payload.findByID({ collection: 'landing', id: landing.id, depth: 0, draft: true, overrideAccess: true })
-    ok('edición legítima de un array de la landing', r2.status === 200 && (l2.aliados ?? []).some((a) => a.nombre === `${MARCA} aliado`), `HTTP ${r2.status}`)
-    await payload.update({ collection: 'landing', id: landing.id, draft: true, data: { aliados: aliadosAntes }, overrideAccess: true })
+    ok(
+      'edición legítima de un array de la landing',
+      r2.status === 200 && (l2.servicios ?? []).some((s) => s.servicio === `${MARCA} servicio`),
+      `HTTP ${r2.status}`,
+    )
+    await payload.update({ collection: 'landing', id: landing.id, draft: true, data: { servicios: serviciosAntes }, overrideAccess: true })
+    const aliadosAntes = JSON.stringify((l2.aliados ?? []).map((a) => a.nombre))
+    const r2b = await fetch(`${BASE}/api/landing/${landing.id}?draft=true`, {
+      method: 'PATCH',
+      headers: { ...auth, ...json },
+      body: JSON.stringify({ aliados: [{ nombre: `${MARCA} aliado`, url: 'https://ejemplo.invalid' }] }),
+    })
+    const l2b = await payload.findByID({ collection: 'landing', id: landing.id, depth: 0, draft: true, overrideAccess: true })
+    ok(
+      'un grupo de investigación no guarda aliados (son solo de los subgrupos)',
+      r2b.status === 200 && JSON.stringify((l2b.aliados ?? []).map((a) => a.nombre)) === aliadosAntes,
+      `HTTP ${r2b.status}`,
+    )
     const r3 = await fetch(`${BASE}/api/media`, { method: 'POST', headers: auth, body: multipart('legitimo', '') })
     const m3 = ((await r3.json()) as { doc?: { id: number } }).doc
     if (m3) temporales.push({ collection: 'media', id: m3.id })
@@ -442,6 +460,7 @@ try {
       'landing',
       'integrantes',
       'publicaciones',
+      'noticias',
       'actividades',
       'eventos',
       'media',
@@ -631,7 +650,7 @@ try {
       `/api/${c}?where[grupo.activo][equals]=false&select[id]=true`,
       `/api/${c}?locale=all&sort=-createdAt&page=1&limit=0`,
     ]
-    for (const c of ['landing', 'integrantes', 'publicaciones', 'actividades', 'eventos', 'grupos', 'media']) {
+    for (const c of ['landing', 'integrantes', 'publicaciones', 'noticias', 'actividades', 'eventos', 'grupos', 'media']) {
       const malas = []
       for (const ruta of variantes(c)) {
         const r = await sinSesion('GET', ruta)

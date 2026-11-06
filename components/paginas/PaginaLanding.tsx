@@ -9,6 +9,7 @@ import { HeroGrupo } from '@/components/flch/HeroGrupo'
 import { IntegrantesGrupo } from '@/components/flch/IntegrantesGrupo'
 import { Infraestructura, Lineas, numero, Objetivos, Presentacion, Servicios } from '@/components/flch/InvestigacionGrupo'
 import { NavGrupo, seccionesOcultas } from '@/components/flch/NavGrupo'
+import { NoticiasGrupo } from '@/components/flch/NoticiasGrupo'
 import { Pie } from '@/components/flch/Pie'
 import { PublicacionesGrupo } from '@/components/flch/PublicacionesGrupo'
 import { Actividades } from '@/components/landing/Actividades'
@@ -80,9 +81,9 @@ const propsColaborar = (d: NonNullable<DatosLanding>) => ({
  * Plantilla Grupo (Claude Design, redesign/Plantilla Grupo.dc.html) para los grupos de investigación. Apartados
  * numerados como en la referencia; los que no tienen datos (objetivos, servicios, líneas) no se muestran y la
  * numeración sigue a los visibles. Infraestructura se muestra siempre, con el aviso de «no hay registros» del diseño.
- * Tras Miembros van Publicaciones y Galería (esta solo con contenido), como apartados numerados del mismo diseño, y
- * Contactos. Los grupos de investigación no muestran aliados, actividades ni agenda (decisión del 06-11-2026); los
- * subgrupos (plantilla Prensa) los conservan.
+ * Tras Miembros van Publicaciones, Noticias y Galería (esta solo con contenido), como apartados numerados del mismo
+ * diseño, y Contactos. Los grupos de investigación no tienen aliados, actividades ni agenda (decisión del 06-11-2026):
+ * publican Noticias. Los subgrupos (plantilla Prensa) conservan aliados, actividades y agenda.
  */
 function LandingFlch({ d, subgrupos }: { d: NonNullable<DatosLanding>; subgrupos: EntradaDirectorio['subgrupos'] }) {
   const inv = d.investigacion
@@ -103,6 +104,7 @@ function LandingFlch({ d, subgrupos }: { d: NonNullable<DatosLanding>; subgrupos
         <Infraestructura n={sig()} inv={inv} />
         <IntegrantesGrupo n={sig()} intro={d.integrantesIntro} integrantes={d.integrantes} />
         <PublicacionesGrupo n={sig()} ruta={d.grupo.ruta} publicaciones={d.publicaciones} />
+        <NoticiasGrupo n={sig()} noticias={d.noticias} />
         {d.galeria.length > 0 && <GaleriaGrupo n={sig()} galeria={d.galeria} />}
         <Colaborar
           {...propsColaborar(d)}

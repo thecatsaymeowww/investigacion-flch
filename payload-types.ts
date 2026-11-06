@@ -70,6 +70,7 @@ export interface Config {
     landing: Landing;
     integrantes: Integrante;
     publicaciones: Publicacione;
+    noticias: Noticia;
     actividades: Actividade;
     eventos: Evento;
     media: Media;
@@ -87,6 +88,7 @@ export interface Config {
     landing: LandingSelect<false> | LandingSelect<true>;
     integrantes: IntegrantesSelect<false> | IntegrantesSelect<true>;
     publicaciones: PublicacionesSelect<false> | PublicacionesSelect<true>;
+    noticias: NoticiasSelect<false> | NoticiasSelect<true>;
     actividades: ActividadesSelect<false> | ActividadesSelect<true>;
     eventos: EventosSelect<false> | EventosSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -422,6 +424,37 @@ export interface Publicacione {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Solo para los grupos de investigación. Los subgrupos publican Actividades.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "noticias".
+ */
+export interface Noticia {
+  id: number;
+  grupo?: (number | null) | Grupo;
+  titulo: string;
+  fecha: string;
+  /**
+   * Ej.: Convocatoria, Publicación, Evento.
+   */
+  categoria?: string | null;
+  /**
+   * Una o dos frases. Se muestra en la tarjeta de la noticia.
+   */
+  resumen: string;
+  /**
+   * Deja una línea en blanco entre párrafos. Se muestra en la noticia más reciente.
+   */
+  texto?: string | null;
+  imagen?: (number | null) | Media;
+  url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Solo para los subgrupos (plantilla Prensa y Literatura). Los grupos de investigación publican Noticias.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "actividades".
  */
@@ -454,6 +487,8 @@ export interface Actividade {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Solo para los subgrupos (plantilla Prensa y Literatura).
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "eventos".
  */
@@ -576,6 +611,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'publicaciones';
         value: number | Publicacione;
+      } | null)
+    | ({
+        relationTo: 'noticias';
+        value: number | Noticia;
       } | null)
     | ({
         relationTo: 'actividades';
@@ -776,6 +815,23 @@ export interface PublicacionesSelect<T extends boolean = true> {
   codigo?: T;
   portada?: T;
   pdf?: T;
+  url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "noticias_select".
+ */
+export interface NoticiasSelect<T extends boolean = true> {
+  grupo?: T;
+  titulo?: T;
+  fecha?: T;
+  categoria?: T;
+  resumen?: T;
+  texto?: T;
+  imagen?: T;
   url?: T;
   updatedAt?: T;
   createdAt?: T;

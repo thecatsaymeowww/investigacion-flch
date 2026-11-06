@@ -400,21 +400,17 @@ if (demo) {
     collection: 'publicaciones',
     data: { grupo: g, titulo: 'Publicación de demostración', autoria: 'Ana Ejemplo Demo', tipo: 'Libro', anio: 2026, ...publicar },
   })
+  // Los grupos de investigación publican Noticias (no actividades ni agenda, que son de los subgrupos).
   await payload.create({
-    collection: 'actividades',
+    collection: 'noticias',
     data: {
       grupo: g,
-      tipo: 'Taller',
-      titulo: 'Taller de demostración',
+      categoria: 'Convocatoria',
+      titulo: 'Noticia de demostración',
       fecha: '2026-10-01',
-      lugar: 'Sala ficticia',
-      resumen: 'Actividad ficticia para probar la plataforma.',
+      resumen: 'Noticia ficticia para probar la plataforma.',
       ...publicar,
     },
-  })
-  await payload.create({
-    collection: 'eventos',
-    data: { grupo: g, titulo: 'Reunión de demostración', fecha: '2026-10-20', hora: '16:00', tipo: 'Reunión', lugar: 'Sala ficticia', ...publicar },
   })
   await payload.create({
     collection: 'landing',

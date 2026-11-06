@@ -1,6 +1,6 @@
 import type { CollectionConfig, Field } from 'payload'
 import { publicadoOPanel, soloSuperadmin, usuarioDelPanel } from '../../lib/access'
-import { calcularPlantilla, coordinadorUnico, soloEnGrupos } from '../../lib/access/privileged'
+import { calcularPlantilla, coordinadorUnico, exigirPlantilla, soloEnGrupos, soloEnSubgrupos } from '../../lib/access/privileged'
 import { hooksEditoriales } from '../hooks'
 
 /** Añade a los hooks editoriales la protección de los campos que solo existen en los grupos (no en subgrupos). */
@@ -8,6 +8,14 @@ const conSoloGrupos = (hooks: CollectionConfig['hooks'], campos: string[]): Coll
   ...hooks,
   beforeValidate: [...(hooks?.beforeValidate ?? []), soloEnGrupos(campos)],
 })
+
+/** Añade a los hooks editoriales la regla de plantilla de la colección (ver exigirPlantilla). */
+const conPlantilla = (hooks: CollectionConfig['hooks'], plantilla: 'grupo' | 'subgrupo', mensaje: string): CollectionConfig['hooks'] => ({
+  ...hooks,
+  beforeValidate: [exigirPlantilla(plantilla, mensaje), ...(hooks?.beforeValidate ?? [])],
+})
+
+const SOLO_SUBGRUPOS = 'Esta sección solo existe en los subgrupos (plantilla Prensa y Literatura). Los grupos de investigación publican Noticias.'
 
 const accesoEditorial: CollectionConfig['access'] = {
   read: publicadoOPanel,
@@ -37,6 +45,8 @@ const campoPlantilla: Field = {
 
 /** Los campos propios de los grupos de investigación no se muestran en un subgrupo (Prensa y Literatura). */
 const soloGrupos = (data: Partial<{ plantilla?: string }> | undefined) => data?.plantilla !== 'subgrupo'
+/** Y al revés: los propios de los subgrupos (aliados) no se muestran en un grupo de investigación. */
+const soloSubgrupos = (data: Partial<{ plantilla?: string }> | undefined) => data?.plantilla !== 'grupo'
 
 /** Campos de la ficha de integrante que solo usan los grupos (estructura de ADISCO, «Miembros»). */
 const CAMPOS_INTEGRANTE_GRUPO = ['tipoInvestigador', 'coordinador', 'vinculo', 'facultad']
@@ -132,14 +142,70 @@ export const Publicaciones: CollectionConfig = {
   ],
 }
 
-export const Actividades: CollectionConfig = {
-  slug: 'actividades',
-  labels: { singular: 'Actividad', plural: 'Actividades' },
-  admin: { useAsTitle: 'titulo', defaultColumns: ['titulo', 'tipo', 'fecha', '_status'], listSearchableFields: ['titulo', 'lugar'], group: GRUPO_PANEL },
+/**
+ * Noticias de los grupos de investigación (06-11-2026): sustituyen a las actividades en los grupos. Las actividades de
+ * los grupos pasaron aquí con la migración `noticias_grupos`; las de los subgrupos siguen en Actividades. Mismos nombres
+ * de columna que Actividades donde el dato es el mismo (titulo, fecha, resumen, texto, imagen, url).
+ */
+export const Noticias: CollectionConfig = {
+  slug: 'noticias',
+  labels: { singular: 'Noticia', plural: 'Noticias' },
+  admin: {
+    useAsTitle: 'titulo',
+    defaultColumns: ['titulo', 'categoria', 'fecha', '_status'],
+    listSearchableFields: ['titulo', 'resumen'],
+    group: GRUPO_PANEL,
+    description: 'Solo para los grupos de investigación. Los subgrupos publican Actividades.',
+  },
   defaultSort: '-fecha',
   versions: { drafts: true },
   access: accesoEditorial,
-  hooks: hooksEditoriales([{ campo: 'imagen', destino: 'media' }]),
+  hooks: conPlantilla(
+    hooksEditoriales([{ campo: 'imagen', destino: 'media' }]),
+    'grupo',
+    'Las noticias solo existen en los grupos de investigación. Los subgrupos publican Actividades.',
+  ),
+  fields: [
+    { name: 'titulo', label: 'Titular', type: 'text', required: true },
+    {
+      type: 'row',
+      fields: [
+        { name: 'fecha', label: 'Fecha', type: 'date', required: true, admin: { date: { pickerAppearance: 'dayOnly', displayFormat: 'd MMM yyyy' } } },
+        { name: 'categoria', label: 'Categoría (opcional)', type: 'text', admin: { description: 'Ej.: Convocatoria, Publicación, Evento.' } },
+      ],
+    },
+    {
+      name: 'resumen',
+      label: 'Entradilla',
+      type: 'textarea',
+      required: true,
+      admin: { description: 'Una o dos frases. Se muestra en la tarjeta de la noticia.' },
+    },
+    {
+      name: 'texto',
+      label: 'Cuerpo',
+      type: 'textarea',
+      admin: { description: 'Deja una línea en blanco entre párrafos. Se muestra en la noticia más reciente.' },
+    },
+    { name: 'imagen', label: 'Imagen', type: 'upload', relationTo: 'media' },
+    { name: 'url', label: 'Enlace a la noticia completa (opcional)', type: 'text', validate: urlValida },
+  ],
+}
+
+export const Actividades: CollectionConfig = {
+  slug: 'actividades',
+  labels: { singular: 'Actividad', plural: 'Actividades' },
+  admin: {
+    useAsTitle: 'titulo',
+    defaultColumns: ['titulo', 'tipo', 'fecha', '_status'],
+    listSearchableFields: ['titulo', 'lugar'],
+    group: GRUPO_PANEL,
+    description: 'Solo para los subgrupos (plantilla Prensa y Literatura). Los grupos de investigación publican Noticias.',
+  },
+  defaultSort: '-fecha',
+  versions: { drafts: true },
+  access: accesoEditorial,
+  hooks: conPlantilla(hooksEditoriales([{ campo: 'imagen', destino: 'media' }]), 'subgrupo', SOLO_SUBGRUPOS),
   fields: [
     { name: 'titulo', label: 'Título', type: 'text', required: true },
     {
@@ -166,11 +232,16 @@ export const Actividades: CollectionConfig = {
 export const Eventos: CollectionConfig = {
   slug: 'eventos',
   labels: { singular: 'Evento de agenda', plural: 'Agenda' },
-  admin: { useAsTitle: 'titulo', defaultColumns: ['titulo', 'fecha', 'hora', '_status'], group: GRUPO_PANEL },
+  admin: {
+    useAsTitle: 'titulo',
+    defaultColumns: ['titulo', 'fecha', 'hora', '_status'],
+    group: GRUPO_PANEL,
+    description: 'Solo para los subgrupos (plantilla Prensa y Literatura).',
+  },
   defaultSort: 'fecha',
   versions: { drafts: true },
   access: accesoEditorial,
-  hooks: hooksEditoriales([]),
+  hooks: conPlantilla(hooksEditoriales([]), 'subgrupo', SOLO_SUBGRUPOS),
   fields: [
     { name: 'titulo', label: 'Título', type: 'text', required: true },
     {
@@ -195,14 +266,18 @@ export const Landing: CollectionConfig = {
   admin: { useAsTitle: 'nombre', group: GRUPO_PANEL },
   versions: { drafts: true },
   access: { read: publicadoOPanel, create: usuarioDelPanel, update: usuarioDelPanel, delete: soloSuperadmin, readVersions: usuarioDelPanel },
-  hooks: conSoloGrupos(
-    hooksEditoriales([
-      { campo: 'fotoHero', destino: 'media' },
-      { campo: 'imagen', destino: 'media', enArray: 'galeria' },
-      { campo: 'logo', destino: 'media', enArray: 'aliados' },
-    ]),
-    CAMPOS_LANDING_GRUPO,
-  ),
+  hooks: (() => {
+    const h = conSoloGrupos(
+      hooksEditoriales([
+        { campo: 'fotoHero', destino: 'media' },
+        { campo: 'imagen', destino: 'media', enArray: 'galeria' },
+        { campo: 'logo', destino: 'media', enArray: 'aliados' },
+      ]),
+      CAMPOS_LANDING_GRUPO,
+    )
+    // Los aliados solo existen en los subgrupos (06-11-2026): en un grupo de investigación no se escriben.
+    return { ...h, beforeValidate: [...(h?.beforeValidate ?? []), soloEnSubgrupos(['aliados'])] }
+  })(),
   fields: [
     campoPlantilla,
     {
@@ -297,6 +372,8 @@ export const Landing: CollectionConfig = {
               label: 'Aliados',
               type: 'array',
               labels: { singular: 'Aliado', plural: 'Aliados' },
+              // Solo en los subgrupos (plantilla Prensa); los grupos de investigación no tienen aliados.
+              admin: { condition: soloSubgrupos },
               fields: [
                 { name: 'nombre', type: 'text', required: true },
                 { name: 'url', label: 'Sitio web', type: 'text', validate: urlValida },

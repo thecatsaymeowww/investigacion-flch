@@ -1,7 +1,7 @@
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 import { getPayload, type Where } from 'payload'
-import type { Actividade, Evento, Grupo, Integrante, Landing, Media, Publicacione } from '@/payload-types'
+import type { Actividade, Evento, Grupo, Integrante, Landing, Media, Noticia, Publicacione } from '@/payload-types'
 import { srcSetDe } from '@/lib/archivos'
 
 /**
@@ -58,12 +58,14 @@ function escuelaDe(grupo: Grupo): string | null {
 async function leerLanding(grupo: Grupo) {
   const payload = await getPayload({ config })
   const g = grupo.id
-  const [landingRes, integrantes, publicaciones, actividades, eventos] = await Promise.all([
+  const [landingRes, integrantes, publicaciones, actividades, eventos, noticias] = await Promise.all([
     payload.find({ collection: 'landing', ...publico, where: delGrupo(g), limit: 1, depth: 1 }),
     payload.find({ collection: 'integrantes', ...publico, where: delGrupo(g), sort: 'orden', limit: 200, depth: 1 }),
     payload.find({ collection: 'publicaciones', ...publico, where: delGrupo(g), sort: '-anio', limit: 500, depth: 1 }),
     payload.find({ collection: 'actividades', ...publico, where: delGrupo(g), sort: '-fecha', limit: 50, depth: 1 }),
     payload.find({ collection: 'eventos', ...publico, where: delGrupo(g), sort: 'fecha', limit: 500, depth: 0 }),
+    // Noticias: solo de los grupos de investigación (en un subgrupo no se crean; ver exigirPlantilla).
+    payload.find({ collection: 'noticias', ...publico, where: delGrupo(g), sort: '-fecha', limit: 50, depth: 1 }),
   ])
   const l = landingRes.docs[0] as Landing | undefined
   if (!l) return null
@@ -154,6 +156,16 @@ async function leerLanding(grupo: Grupo) {
       imagen: imagen(a.imagen),
       url: a.url ?? '',
     })),
+    noticias: (noticias.docs as Noticia[]).map((n) => ({
+      id: n.id,
+      categoria: n.categoria ?? '',
+      titulo: n.titulo,
+      fecha: n.fecha.slice(0, 10),
+      resumen: n.resumen,
+      texto: parrafos(n.texto),
+      imagen: imagen(n.imagen),
+      url: n.url ?? '',
+    })),
     eventos: (eventos.docs as Evento[]).map((e) => ({ date: e.fecha.slice(0, 10), time: e.hora, title: e.titulo, kind: e.tipo, place: e.lugar })),
     galeria: (l.galeria ?? []).map((g) => ({ imagen: imagen(g.imagen), pie: g.pie, alta: Boolean(g.alta) })).filter((g) => g.imagen),
     colaborar: {
@@ -185,7 +197,7 @@ const rutasActivas = unstable_cache(
  * datos (.next/cache) sobrevive a los builds y, sin esto, el primer servidor nuevo recibiría entradas con la forma
  * antigua (p. ej. sin `investigacion`) hasta que caducaran.
  */
-const VERSION_LANDING = 'v2-adisco'
+const VERSION_LANDING = 'v3-noticias'
 
 /**
  * Landing completa de un grupo o subgrupo activo, por su ruta ("litartmo" o

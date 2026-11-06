@@ -3,6 +3,7 @@ import * as migration_20261030_161656_escuela_grupos from './20261030_161656_esc
 import * as migration_20261103_201313_antispam_4c from './20261103_201313_antispam_4c';
 import * as migration_20261103_215923_imagenes_5b from './20261103_215923_imagenes_5b';
 import * as migration_20261105_213540_grupos_adisco from './20261105_213540_grupos_adisco';
+import * as migration_20261106_163405_noticias_grupos from './20261106_163405_noticias_grupos';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20261105_213540_grupos_adisco.up,
     down: migration_20261105_213540_grupos_adisco.down,
-    name: '20261105_213540_grupos_adisco'
+    name: '20261105_213540_grupos_adisco',
+  },
+  {
+    up: migration_20261106_163405_noticias_grupos.up,
+    down: migration_20261106_163405_noticias_grupos.down,
+    name: '20261106_163405_noticias_grupos'
   },
 ];
