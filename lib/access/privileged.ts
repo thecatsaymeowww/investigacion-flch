@@ -307,7 +307,13 @@ export function soloEnSubgrupos(campos: string[]): CollectionBeforeValidateHook 
   return conservarCampos(campos, false)
 }
 
-/** Sustituye los `campos` por los que ya había (nada, en un alta) cuando el grupo dueño NO es de la plantilla que los usa. */
+/** Valor vacío: vaciar un campo de la otra plantilla no añade datos, así que siempre se permite (limpiezas). */
+const vacio = (v: unknown) => v == null || v === '' || (Array.isArray(v) && v.length === 0)
+
+/**
+ * Sustituye los `campos` por los que ya había (nada, en un alta) cuando el grupo dueño NO es de la plantilla que los usa.
+ * Vaciarlos sí se permite.
+ */
 function conservarCampos(campos: string[], deGrupos: boolean): CollectionBeforeValidateHook {
   return async ({ data, originalDoc, req }) => {
     if (!data) return data
@@ -315,6 +321,7 @@ function conservarCampos(campos: string[], deGrupos: boolean): CollectionBeforeV
     if (sub == null || sub !== deGrupos) return data
     const limpio: Record<string, unknown> = { ...data }
     for (const c of campos) {
+      if (c in data && vacio(data[c])) continue
       if (originalDoc && c in originalDoc) limpio[c] = originalDoc[c]
       else delete limpio[c]
     }
