@@ -41,6 +41,9 @@
 .cuerpo {
   grid-column: span 2;
   min-width: 0;
+  /* Contenido real de las fichas: palabras o URL sin espacios («coloniales/republicanas/contemporáneas»,
+     https://…) se parten en lugar de desbordar en móvil. Solo actúa cuando una palabra no cabe en la línea. */
+  overflow-wrap: anywhere;
 }
 /* Con una sola columna, el contenido ocupa la fila entera (sin columna implícita). */
 @media (max-width: 700px) {
