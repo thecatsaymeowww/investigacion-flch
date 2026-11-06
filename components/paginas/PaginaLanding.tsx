@@ -7,7 +7,7 @@ import { CifrasGrupo } from '@/components/flch/CifrasGrupo'
 import { GaleriaGrupo } from '@/components/flch/GaleriaGrupo'
 import { HeroGrupo } from '@/components/flch/HeroGrupo'
 import { IntegrantesGrupo } from '@/components/flch/IntegrantesGrupo'
-import { Infraestructura, Lineas, numero, Objetivos, Presentacion, Servicios } from '@/components/flch/InvestigacionGrupo'
+import { Infraestructura, Lineas, Objetivos, Presentacion, Servicios } from '@/components/flch/InvestigacionGrupo'
 import { NavGrupo, seccionesOcultas } from '@/components/flch/NavGrupo'
 import { NoticiasGrupo } from '@/components/flch/NoticiasGrupo'
 import { Pie } from '@/components/flch/Pie'
@@ -78,17 +78,14 @@ const propsColaborar = (d: NonNullable<DatosLanding>) => ({
 })
 
 /**
- * Plantilla Grupo (Claude Design, redesign/Plantilla Grupo.dc.html) para los grupos de investigación. Apartados
- * numerados como en la referencia; los que no tienen datos (objetivos, servicios, líneas) no se muestran y la
- * numeración sigue a los visibles. Infraestructura se muestra siempre, con el aviso de «no hay registros» del diseño.
- * Tras Miembros van Publicaciones, Noticias y Galería (esta solo con contenido), como apartados numerados del mismo
- * diseño, y Contactos. Los grupos de investigación no tienen aliados, actividades ni agenda (decisión del 06-11-2026):
+ * Plantilla Grupo (Claude Design, redesign/Plantilla Grupo.dc.html) para los grupos de investigación, sin el número de
+ * apartado de la referencia (decisión del 06-11-2026). Los apartados sin datos (objetivos, servicios, líneas) no se
+ * muestran. Infraestructura se muestra siempre, con el aviso de «no hay registros» del diseño. Tras Miembros van
+ * Publicaciones, Noticias y Galería (esta solo con contenido), con el mismo diseño, y Contactos. Los grupos de investigación no tienen aliados, actividades ni agenda (decisión del 06-11-2026):
  * publican Noticias. Los subgrupos (plantilla Prensa) conservan aliados, actividades y agenda.
  */
 function LandingFlch({ d, subgrupos }: { d: NonNullable<DatosLanding>; subgrupos: EntradaDirectorio['subgrupos'] }) {
   const inv = d.investigacion
-  let n = 0
-  const sig = () => ++n
   const coordinador = d.integrantes.find((m) => m.coordinador)
   return (
     <TemaFlch>
@@ -96,19 +93,19 @@ function LandingFlch({ d, subgrupos }: { d: NonNullable<DatosLanding>; subgrupos
       <NavGrupo ruta={d.grupo.ruta} nombre={d.identidad.nombre} pagina="portada" ocultas={seccionesOcultas(d)} />
       <HeroGrupo d={d} subgrupos={subgrupos} />
       <main className={`${b.contenedor} ${b.principal}`}>
-        <Presentacion n={sig()} texto={d.editorial.texto} />
+        <Presentacion texto={d.editorial.texto} />
         <CifrasGrupo cifras={d.cifras} lineas={inv.lineas.length} />
-        {(inv.objetivoGeneral || inv.objetivos.length > 0) && <Objetivos n={sig()} inv={inv} />}
-        {inv.servicios.length > 0 && <Servicios n={sig()} servicios={inv.servicios} />}
-        {inv.lineas.length > 0 && <Lineas n={sig()} lineas={inv.lineas} />}
-        <Infraestructura n={sig()} inv={inv} />
-        <IntegrantesGrupo n={sig()} intro={d.integrantesIntro} integrantes={d.integrantes} />
-        <PublicacionesGrupo n={sig()} ruta={d.grupo.ruta} publicaciones={d.publicaciones} />
-        <NoticiasGrupo n={sig()} noticias={d.noticias} />
-        {d.galeria.length > 0 && <GaleriaGrupo n={sig()} galeria={d.galeria} />}
+        {(inv.objetivoGeneral || inv.objetivos.length > 0) && <Objetivos inv={inv} />}
+        {inv.servicios.length > 0 && <Servicios servicios={inv.servicios} />}
+        {inv.lineas.length > 0 && <Lineas lineas={inv.lineas} />}
+        <Infraestructura inv={inv} />
+        <IntegrantesGrupo intro={d.integrantesIntro} integrantes={d.integrantes} />
+        <PublicacionesGrupo ruta={d.grupo.ruta} publicaciones={d.publicaciones} />
+        <NoticiasGrupo noticias={d.noticias} />
+        {d.galeria.length > 0 && <GaleriaGrupo galeria={d.galeria} />}
         <Colaborar
           {...propsColaborar(d)}
-          etiqueta={`${numero(sig())} · Contactos`}
+          etiqueta="Contactos"
           titular={`Escriba a ${d.identidad.nombre}`}
           texto={d.colaborar.texto || TEXTO_CONTACTO}
           variante="flch"

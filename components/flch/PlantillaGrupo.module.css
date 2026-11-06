@@ -1,7 +1,7 @@
 /* Plantilla Grupo (Claude Design, redesign/Plantilla Grupo.dc.html): apartados con la estructura de ADISCO.
    Medidas y tipografía del HTML de referencia sobre los tokens de .tema-flch (azul institucional #192b52, ocre AA). */
 
-/* Sección numerada: cabecera (número y título) a la izquierda y contenido en las dos columnas restantes. */
+/* Apartado: cabecera (título) a la izquierda y contenido en las dos columnas restantes. Sin número (06-11-2026). */
 .seccion {
   padding: 56px 0;
   border-bottom: 1px solid var(--borde);
@@ -14,13 +14,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-.numero {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--ocre);
 }
 .h2 {
   margin: 0;

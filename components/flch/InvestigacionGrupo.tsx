@@ -4,7 +4,7 @@ import p from './PlantillaGrupo.module.css'
 type Datos = NonNullable<DatosLanding>
 type Investigacion = Datos['investigacion']
 
-/** Número de apartado de la referencia: «01», «02»… (se cuentan solo los apartados que se muestran). */
+/** Número de un elemento de lista con dos cifras: «01», «02»… (objetivos específicos). */
 export const numero = (n: number) => String(n).padStart(2, '0')
 
 /** Recuento real bajo el título de un apartado: «1 publicación», «4 publicaciones». */
@@ -12,7 +12,6 @@ export const cuenta = (n: number, singular: string, plural: string) => `${n} ${n
 
 type SeccionProps = {
   id: string
-  n: number
   titulo: string
   /** Línea bajo el título (p. ej. «7 miembros registrados»). */
   resumen?: string
@@ -21,12 +20,14 @@ type SeccionProps = {
   children: React.ReactNode
 }
 
-/** Apartado numerado de la Plantilla Grupo: número y título a la izquierda, contenido en las dos columnas restantes. */
-export function SeccionNumerada({ id, n, titulo, resumen, extra, children }: SeccionProps) {
+/**
+ * Apartado de la Plantilla Grupo: título a la izquierda y contenido en las dos columnas restantes. Sin número de
+ * apartado («Presentación», no «01 Presentación»), por decisión del usuario (06-11-2026).
+ */
+export function SeccionGrupo({ id, titulo, resumen, extra, children }: SeccionProps) {
   return (
     <section id={id} className={p.seccion} aria-labelledby={`${id}-titulo`}>
       <div className={p.cab}>
-        <span className={p.numero}>{numero(n)}</span>
         <h2 id={`${id}-titulo`} className={p.h2}>
           {titulo}
         </h2>
@@ -39,26 +40,26 @@ export function SeccionNumerada({ id, n, titulo, resumen, extra, children }: Sec
 }
 
 /** Presentación: el «Texto» de portada de la landing, en párrafos. */
-export function Presentacion({ n, texto }: { n: number; texto: string }) {
+export function Presentacion({ texto }: { texto: string }) {
   const parrafos = texto
     .split(/\n\s*\n/)
     .map((x) => x.trim())
     .filter(Boolean)
   return (
-    <SeccionNumerada id="presentacion" n={n} titulo="Presentación">
+    <SeccionGrupo id="presentacion" titulo="Presentación">
       <div className={p.presentacion}>
         {parrafos.map((x, i) => (
           <p key={i}>{x}</p>
         ))}
       </div>
-    </SeccionNumerada>
+    </SeccionGrupo>
   )
 }
 
 /** Objetivo general (recuadro azul) y objetivos específicos numerados. */
-export function Objetivos({ n, inv }: { n: number; inv: Investigacion }) {
+export function Objetivos({ inv }: { inv: Investigacion }) {
   return (
-    <SeccionNumerada id="objetivos" n={n} titulo="Objetivos">
+    <SeccionGrupo id="objetivos" titulo="Objetivos">
       <div className={p.objetivos}>
         {inv.objetivoGeneral && (
           <div className={p.general}>
@@ -82,13 +83,13 @@ export function Objetivos({ n, inv }: { n: number; inv: Investigacion }) {
           </div>
         )}
       </div>
-    </SeccionNumerada>
+    </SeccionGrupo>
   )
 }
 
-export function Servicios({ n, servicios }: { n: number; servicios: string[] }) {
+export function Servicios({ servicios }: { servicios: string[] }) {
   return (
-    <SeccionNumerada id="servicios" n={n} titulo="Servicios">
+    <SeccionGrupo id="servicios" titulo="Servicios">
       <ol className={p.servicios}>
         {servicios.map((s, i) => (
           <li key={i} className={p.servicio}>
@@ -99,14 +100,14 @@ export function Servicios({ n, servicios }: { n: number; servicios: string[] }) 
           </li>
         ))}
       </ol>
-    </SeccionNumerada>
+    </SeccionGrupo>
   )
 }
 
 /** Tabla Código / Línea, en el orden del panel. */
-export function Lineas({ n, lineas }: { n: number; lineas: Investigacion['lineas'] }) {
+export function Lineas({ lineas }: { lineas: Investigacion['lineas'] }) {
   return (
-    <SeccionNumerada id="lineas" n={n} titulo="Líneas de investigación">
+    <SeccionGrupo id="lineas" titulo="Líneas de investigación">
       <table className={p.lineas}>
         <thead>
           <tr>
@@ -123,14 +124,14 @@ export function Lineas({ n, lineas }: { n: number; lineas: Investigacion['lineas
           ))}
         </tbody>
       </table>
-    </SeccionNumerada>
+    </SeccionGrupo>
   )
 }
 
 /** Ambientes físicos y equipamiento; sin registros, el aviso de la referencia (nada inventado). */
-export function Infraestructura({ n, inv }: { n: number; inv: Investigacion }) {
+export function Infraestructura({ inv }: { inv: Investigacion }) {
   return (
-    <SeccionNumerada id="infraestructura" n={n} titulo="Infraestructura">
+    <SeccionGrupo id="infraestructura" titulo="Infraestructura">
       <div className={p.infra}>
         <div id="ambientes" className={p.tarjeta}>
           <h3 className={p.h3}>Ambientes físicos</h3>
@@ -162,6 +163,6 @@ export function Infraestructura({ n, inv }: { n: number; inv: Investigacion }) {
           )}
         </div>
       </div>
-    </SeccionNumerada>
+    </SeccionGrupo>
   )
 }

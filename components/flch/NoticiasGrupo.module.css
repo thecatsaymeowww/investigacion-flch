@@ -1,4 +1,4 @@
-/* Noticias en el apartado numerado de la Plantilla Grupo (diseño de las antiguas Actividades): la más reciente a todo el
+/* Noticias en el apartado de la Plantilla Grupo (diseño de las antiguas Actividades): la más reciente a todo el
    ancho del contenido y las demás en tarjetas (mismo borde, radio y rótulos ocres que Servicios e Infraestructura). */
 .noticias {
   display: flex;

@@ -1,7 +1,7 @@
 import type { DatosLanding } from '@/lib/cms'
 import { fechaLarga } from '@/lib/utils'
 import { Foto } from './Foto'
-import { cuenta, SeccionNumerada } from './InvestigacionGrupo'
+import { cuenta, SeccionGrupo } from './InvestigacionGrupo'
 import ps from './PlantillaGrupo.module.css'
 import s from './NoticiasGrupo.module.css'
 
@@ -10,18 +10,18 @@ type Noticia = NonNullable<DatosLanding>['noticias'][number]
 /** Línea de fecha de una noticia: «Convocatoria · 28 de octubre de 2026» (la categoría es opcional). */
 const fechaDe = (n: Noticia) => [n.categoria, fechaLarga(n.fecha)].filter(Boolean).join(' · ')
 
-/** Apartado numerado de los grupos: la noticia más reciente en grande y las demás en tarjetas, de la más nueva a la más antigua. */
-export function NoticiasGrupo({ n, noticias }: { n: number; noticias: Noticia[] }) {
+/** Apartado de los grupos: la noticia más reciente en grande y las demás en tarjetas, de la más nueva a la más antigua. */
+export function NoticiasGrupo({ noticias }: { noticias: Noticia[] }) {
   if (!noticias.length) {
     return (
-      <SeccionNumerada id="noticias" n={n} titulo="Noticias">
+      <SeccionGrupo id="noticias" titulo="Noticias">
         <p className={ps.vacio}>Todavía no hay noticias publicadas.</p>
-      </SeccionNumerada>
+      </SeccionGrupo>
     )
   }
   const [d, ...otras] = [...noticias].sort((a, b) => b.fecha.localeCompare(a.fecha))
   return (
-    <SeccionNumerada id="noticias" n={n} titulo="Noticias" resumen={cuenta(noticias.length, 'noticia publicada', 'noticias publicadas')}>
+    <SeccionGrupo id="noticias" titulo="Noticias" resumen={cuenta(noticias.length, 'noticia publicada', 'noticias publicadas')}>
       <div className={s.noticias}>
         <article className={s.principal}>
           <Foto img={d.imagen} alt={d.titulo} sigla={d.categoria || 'Noticia'} className={s.foto} sizes="(max-width: 900px) 100vw, 60vw" />
@@ -63,6 +63,6 @@ export function NoticiasGrupo({ n, noticias }: { n: number; noticias: Noticia[] 
           </ul>
         )}
       </div>
-    </SeccionNumerada>
+    </SeccionGrupo>
   )
 }

@@ -2,7 +2,7 @@ import { FichaIntegrante } from '@/components/landing/FichaIntegrante'
 import type { DatosLanding } from '@/lib/cms'
 import { iniciales } from '@/lib/utils'
 import b from './base.module.css'
-import { SeccionNumerada } from './InvestigacionGrupo'
+import { SeccionGrupo } from './InvestigacionGrupo'
 import s from './IntegrantesGrupo.module.css'
 import p from './PlantillaGrupo.module.css'
 
@@ -22,12 +22,12 @@ function agrupar(integrantes: Integrante[]) {
  * Miembros (Plantilla Grupo): lista por tipo de investigador, con retrato o iniciales, «vínculo · facultad» (o el grado,
  * si no hay) y la insignia del coordinador. Con biografía, la fila abre la ficha del integrante.
  */
-export function IntegrantesGrupo({ n, intro, integrantes }: { n: number; intro: string; integrantes: Integrante[] }) {
+export function IntegrantesGrupo({ intro, integrantes }: { intro: string; integrantes: Integrante[] }) {
   const total = integrantes.length
   // Índice de cada integrante en la lista completa: es el que enlaza su fila con su ficha.
   const indice = new Map(integrantes.map((m, i) => [m.id, i]))
   return (
-    <SeccionNumerada id="miembros" n={n} titulo="Miembros" resumen={`${total} ${total === 1 ? 'miembro registrado' : 'miembros registrados'}`}>
+    <SeccionGrupo id="miembros" titulo="Miembros" resumen={`${total} ${total === 1 ? 'miembro registrado' : 'miembros registrados'}`}>
       <div className={p.miembros}>
         {intro && <p className={p.intro}>{intro}</p>}
         {total === 0 && !intro && <p className={b.vacio}>Todavía no hay integrantes publicados.</p>}
@@ -100,6 +100,6 @@ export function IntegrantesGrupo({ n, intro, integrantes }: { n: number; intro: 
           </div>
         ))}
       </FichaIntegrante>
-    </SeccionNumerada>
+    </SeccionGrupo>
   )
 }
