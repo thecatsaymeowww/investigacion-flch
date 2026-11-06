@@ -294,7 +294,7 @@ export const Landing: CollectionConfig = {
             { name: 'integrantesIntro', label: 'Introducción de Integrantes', type: 'textarea' },
             {
               name: 'aliados',
-              label: 'Aliados («Con el apoyo de»)',
+              label: 'Aliados',
               type: 'array',
               labels: { singular: 'Aliado', plural: 'Aliados' },
               fields: [
