@@ -1,12 +1,14 @@
 import type { DatosLanding } from '@/lib/cms'
-import { Seccion } from './Seccion'
+import { cuenta, SeccionNumerada } from './InvestigacionGrupo'
 import s from './GaleriaGrupo.module.css'
 
-/** Galería en mosaico: las láminas marcadas como «altas» ocupan dos filas. Sin láminas no se muestra. */
-export function GaleriaGrupo({ galeria }: { galeria: NonNullable<DatosLanding>['galeria'] }) {
-  if (!galeria.length) return null
+/**
+ * Apartado numerado con la galería en mosaico: las láminas marcadas como «altas» ocupan dos filas.
+ * Sin láminas no se llama (la numeración sigue a los apartados visibles).
+ */
+export function GaleriaGrupo({ n, galeria }: { n: number; galeria: NonNullable<DatosLanding>['galeria'] }) {
   return (
-    <Seccion id="galeria" titulo="Galería">
+    <SeccionNumerada id="galeria" n={n} titulo="Galería" resumen={cuenta(galeria.length, 'imagen', 'imágenes')}>
       <div className={s.galeria}>
         {galeria.map((g, i) => (
           <figure key={i} className={`${s.figura} ${g.alta ? s.alta : ''}`}>
@@ -22,10 +24,10 @@ export function GaleriaGrupo({ galeria }: { galeria: NonNullable<DatosLanding>['
                 />
               )}
             </div>
-            <figcaption className={s.pie}>{g.pie}</figcaption>
+            {g.pie && <figcaption className={s.pie}>{g.pie}</figcaption>}
           </figure>
         ))}
       </div>
-    </Seccion>
+    </SeccionNumerada>
   )
 }

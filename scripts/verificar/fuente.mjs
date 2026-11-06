@@ -9,6 +9,11 @@ import path from 'node:path'
 import { RAIZ, relativa } from './comun.mjs'
 
 const DIRECTORIOS_EXCLUIDOS = new Set(['node_modules', '.next', '.git', 'media', 'public'])
+/**
+ * Carpetas excluidas solo en esa ruta exacta desde la raíz (no por nombre en cualquier nivel): `redesign` es material
+ * de referencia de Claude Design (HTML exportado y su runtime support.js), que la aplicación no importa ni ejecuta.
+ */
+const RUTAS_EXCLUIDAS = new Set(['redesign'])
 /** Generados por Payload (`pnpm generate`): no son código escrito a mano. */
 const GENERADOS = new Set(['payload-types.ts', 'app/(payload)/admin/importMap.js'])
 const EXTENSIONES = /\.(ts|tsx|js|jsx|mjs|cjs)$/
@@ -18,7 +23,7 @@ export function archivosPropios(dir = RAIZ) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
     const ruta = path.join(dir, e.name)
     if (e.isDirectory()) {
-      if (!DIRECTORIOS_EXCLUIDOS.has(e.name)) lista.push(...archivosPropios(ruta))
+      if (!DIRECTORIOS_EXCLUIDOS.has(e.name) && !RUTAS_EXCLUIDAS.has(relativa(ruta))) lista.push(...archivosPropios(ruta))
     } else if (EXTENSIONES.test(e.name) && !e.name.endsWith('.d.ts') && !GENERADOS.has(relativa(ruta))) {
       lista.push(ruta)
     }

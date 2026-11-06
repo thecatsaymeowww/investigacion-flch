@@ -1,19 +1,18 @@
 'use client'
 
 import { DIAS, fechaCorta, useAgenda, type Evento } from '@/lib/agenda'
-import b from './base.module.css'
+import { SeccionNumerada } from './InvestigacionGrupo'
+import ps from './PlantillaGrupo.module.css'
 import s from './AgendaGrupo.module.css'
 
-/** Calendario mensual y lista de citas del mes (o del día elegido). La lógica es la de lib/agenda. */
-export function AgendaGrupo({ eventos, hoyServidor }: { eventos: Evento[]; hoyServidor: string }) {
+/**
+ * Apartado numerado: calendario mensual y, debajo, las citas del mes (o del día elegido) en tarjetas.
+ * La lógica es la de lib/agenda, sin cambios.
+ */
+export function AgendaGrupo({ n, eventos, hoyServidor }: { n: number; eventos: Evento[]; hoyServidor: string }) {
   const a = useAgenda(eventos, hoyServidor)
   return (
-    <section id="agenda" className={b.seccion} aria-labelledby="agenda-titulo">
-      <div className={b.cab}>
-        <h2 id="agenda-titulo" className={b.h2}>
-          Agenda
-        </h2>
-      </div>
+    <SeccionNumerada id="agenda" n={n} titulo="Agenda">
       <div className={s.agenda}>
         <div className={s.cal}>
           <div className={s.barra}>
@@ -85,10 +84,10 @@ export function AgendaGrupo({ eventos, hoyServidor }: { eventos: Evento[]; hoySe
               </div>
             ))
           ) : (
-            <p className={b.vacio}>Sin actividades programadas.</p>
+            <p className={ps.vacio}>Sin actividades programadas.</p>
           )}
         </div>
       </div>
-    </section>
+    </SeccionNumerada>
   )
 }

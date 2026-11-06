@@ -1,11 +1,14 @@
+/* Rejilla de la landing (solo PublicacionesGrupo): las 4 recientes caben en una fila dentro de las dos columnas de
+   contenido del apartado numerado; en móvil, dos por fila. El archivo usa su propia rejilla. */
 .grilla {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
   gap: 20px;
 }
 @media (max-width: 519px) {
   .grilla {
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 }
 

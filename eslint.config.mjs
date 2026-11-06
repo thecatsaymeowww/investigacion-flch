@@ -9,6 +9,11 @@ const config = [
     ignores: ['.next/**', 'node_modules/**', 'payload-types.ts', 'app/(payload)/**', 'migrations/**'],
   },
   {
+    // Material de referencia de Claude Design (HTML exportado y su runtime support.js): no es código de la
+    // aplicación, nada lo importa y se conserva tal cual, sin corregirlo.
+    ignores: ['redesign/**'],
+  },
+  {
     rules: {
       // Las imágenes las sirve Payload con control de acceso y se muestran con <img>
       // como en el prototipo (sin optimizador: next.config images.unoptimized).

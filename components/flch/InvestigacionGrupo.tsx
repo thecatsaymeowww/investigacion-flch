@@ -7,17 +7,22 @@ type Investigacion = Datos['investigacion']
 /** Número de apartado de la referencia: «01», «02»… (se cuentan solo los apartados que se muestran). */
 export const numero = (n: number) => String(n).padStart(2, '0')
 
+/** Recuento real bajo el título de un apartado: «1 publicación», «4 publicaciones». */
+export const cuenta = (n: number, singular: string, plural: string) => `${n} ${n === 1 ? singular : plural}`
+
 type SeccionProps = {
   id: string
   n: number
   titulo: string
   /** Línea bajo el título (p. ej. «7 miembros registrados»). */
   resumen?: string
+  /** Enlace bajo el resumen (p. ej. «Ver todas →» hacia el archivo). */
+  extra?: React.ReactNode
   children: React.ReactNode
 }
 
 /** Apartado numerado de la Plantilla Grupo: número y título a la izquierda, contenido en las dos columnas restantes. */
-export function SeccionNumerada({ id, n, titulo, resumen, children }: SeccionProps) {
+export function SeccionNumerada({ id, n, titulo, resumen, extra, children }: SeccionProps) {
   return (
     <section id={id} className={p.seccion} aria-labelledby={`${id}-titulo`}>
       <div className={p.cab}>
@@ -26,6 +31,7 @@ export function SeccionNumerada({ id, n, titulo, resumen, children }: SeccionPro
           {titulo}
         </h2>
         {resumen && <span className={p.resumen}>{resumen}</span>}
+        {extra}
       </div>
       <div className={p.cuerpo}>{children}</div>
     </section>

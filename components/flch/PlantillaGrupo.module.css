@@ -31,6 +31,13 @@
   font-size: 14px;
   color: var(--texto-2);
 }
+/* Enlace de la cabecera del apartado (Publicaciones → archivo). */
+.cabEnlace {
+  align-self: flex-start;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--azul);
+}
 .cuerpo {
   grid-column: span 2;
   min-width: 0;
@@ -66,6 +73,16 @@
   margin: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+}
+/* Tres cifras (sin «Proyectos», que no tiene fuente): tres columnas iguales, sin huecos ni una cifra suelta en una
+   segunda fila; en móvil, una debajo de otra. */
+.cifrasTres {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 560px) {
+  .cifrasTres {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 /* Número primero y etiqueta debajo, sin cambiar el orden de lectura (dt antes que dd). */
 .cifra {

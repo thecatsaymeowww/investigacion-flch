@@ -13,3 +13,6 @@ pnpm-lock.yaml
 
 # Archivos estáticos que se sirven tal cual.
 public/
+
+# Material de referencia de Claude Design: se conserva tal como se exportó (`pnpm formato` lo reescribiría).
+/redesign/

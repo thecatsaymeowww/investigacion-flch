@@ -1,21 +1,23 @@
 import Link from 'next/link'
 import type { Pub } from '@/components/landing/Portada'
-import { Seccion } from './Seccion'
+import { cuenta, SeccionNumerada } from './InvestigacionGrupo'
 import { TarjetaPublicacion } from './TarjetaPublicacion'
-import b from './base.module.css'
+import ps from './PlantillaGrupo.module.css'
 import p from './Publicaciones.module.css'
 
-/** Las 4 publicaciones más recientes y el enlace al archivo completo del grupo. */
-export function PublicacionesGrupo({ ruta, publicaciones }: { ruta: string; publicaciones: Pub[] }) {
+/** Apartado numerado con las 4 publicaciones más recientes y el enlace al archivo completo del grupo. */
+export function PublicacionesGrupo({ n, ruta, publicaciones }: { n: number; ruta: string; publicaciones: Pub[] }) {
   const recientes = [...publicaciones].sort((a, b) => b.anio.localeCompare(a.anio) || b.codigo.localeCompare(a.codigo)).slice(0, 4)
   return (
-    <Seccion
+    <SeccionNumerada
       id="publicaciones"
-      titulo="Publicaciones recientes"
+      n={n}
+      titulo="Publicaciones"
+      resumen={publicaciones.length > 0 ? cuenta(publicaciones.length, 'publicación registrada', 'publicaciones registradas') : undefined}
       extra={
         publicaciones.length > 0 && (
-          <Link href={`/${ruta}/archivo`} className={b.enlaceExtra}>
-            Ver todas →
+          <Link href={`/${ruta}/archivo`} className={ps.cabEnlace}>
+            Ver todas en el archivo →
           </Link>
         )
       }
@@ -27,8 +29,8 @@ export function PublicacionesGrupo({ ruta, publicaciones }: { ruta: string; publ
           ))}
         </div>
       ) : (
-        <p className={b.vacio}>Todavía no hay publicaciones.</p>
+        <p className={ps.vacio}>Todavía no hay publicaciones.</p>
       )}
-    </Seccion>
+    </SeccionNumerada>
   )
 }

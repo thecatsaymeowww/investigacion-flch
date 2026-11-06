@@ -1,11 +1,11 @@
+/* Agenda en el apartado numerado de la Plantilla Grupo: el calendario ocupa el ancho del contenido y las citas
+   van debajo, en tarjetas como las de Servicios. */
 .agenda {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 24px;
-  align-items: flex-start;
 }
 .cal {
-  flex: 2 1 560px;
   min-width: 0;
   background: var(--blanco);
   border: 1px solid var(--borde);
@@ -111,11 +111,15 @@
 }
 
 .lista {
-  flex: 1 1 280px;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
   gap: 12px;
+}
+/* El título de la lista y el aviso «Sin actividades» ocupan la fila entera. */
+.listaCab,
+.lista > p {
+  grid-column: 1 / -1;
 }
 .listaCab {
   display: flex;
@@ -124,7 +128,7 @@
   gap: 12px;
 }
 .listaTitulo {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.4px;
   text-transform: uppercase;

@@ -9,40 +9,6 @@
   flex: 1;
 }
 
-/* Sección con cabecera: título serif azul sobre filete de 2 px */
-.seccion {
-  padding: 56px 0;
-  border-bottom: 1px solid var(--borde);
-  scroll-margin-top: var(--nav-alto);
-}
-.cab {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  flex-wrap: wrap;
-  border-bottom: 2px solid var(--azul);
-  padding-bottom: 10px;
-  margin-bottom: 24px;
-}
-.cabCompacta {
-  margin-bottom: 8px;
-}
-.h2 {
-  margin: 0;
-  font: 500 clamp(28px, 3.2vw, 38px)/1.1 var(--f-serif);
-  color: var(--azul);
-}
-.extra {
-  margin-left: auto;
-  font-size: 13px;
-  color: var(--texto-2);
-}
-.enlaceExtra {
-  margin-left: auto;
-  font-size: 13.5px;
-  font-weight: 600;
-}
-
 /* Etiqueta ocre en versalitas (tipo de publicación, rol, tipo de actividad) */
 .etiqueta {
   font-size: 10.5px;
