@@ -58,3 +58,5 @@ lighthouse*.json
 lighthouse*.html
 /visual.png
 /redesign/
+# certificado SSL institucional de producción: se coloca a mano en el servidor (README, «Certificado SSL»)
+deploy/nginx/certs/

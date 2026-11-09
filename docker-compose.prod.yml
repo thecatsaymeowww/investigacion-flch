@@ -1,0 +1,81 @@
+# Producción: Nginx (HTTPS) → app (Next.js + Payload) → PostgreSQL, en una red interna. Uso, en el servidor:
+#   docker compose -f docker-compose.prod.yml up -d --build
+# Variables en .env (plantilla: deploy/produccion.env.example; nunca se versiona). Solo Nginx publica puertos (80/443);
+# la app y Postgres no son accesibles desde fuera. Procedimiento completo en el README, «Producción con Docker».
+# El docker-compose.yml (solo Postgres, para desarrollo) es independiente de este archivo.
+name: investigacion-flch
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?falta POSTGRES_DB en .env}
+      POSTGRES_USER: ${POSTGRES_USER:?falta POSTGRES_USER en .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?falta POSTGRES_PASSWORD en .env}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [interna]
+
+  app:
+    build:
+      context: .
+      target: app
+      args:
+        NEXT_PUBLIC_SITE_URL: https://${PUBLIC_SITE_DOMAIN:?falta PUBLIC_SITE_DOMAIN en .env}
+    image: investigacion-flch-app
+    restart: unless-stopped
+    # Solo lo que necesita la app: ni POSTGRES_PASSWORD ni la clave del rol propietario (lib/entorno.ts,
+    # scripts/guardia-conexion.ts). Se conecta con el rol sin privilegios plataforma_app (deploy/postgres/roles.sql).
+    environment:
+      DATABASE_URI: postgres://plataforma_app:${PLATAFORMA_APP_PASSWORD:?falta PLATAFORMA_APP_PASSWORD en .env}@postgres:5432/${POSTGRES_DB}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?falta PAYLOAD_SECRET en .env}
+      NEXT_PUBLIC_SITE_URL: https://${PUBLIC_SITE_DOMAIN}
+      CONFIAR_EN_PROXY: '1'
+      PAYLOAD_COOKIE_SECURE: 'true'
+    volumes:
+      # Archivos subidos al CMS (fotos, PDF). Carpeta del servidor, fuera de git; se respalda junto con la base.
+      - ${MEDIA_DIR:-./media}:/app/media
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'node', '-e', "fetch('http://127.0.0.1:3000/').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks: [interna]
+
+  nginx:
+    image: nginx:1.28-alpine
+    restart: unless-stopped
+    ports:
+      - '${HTTP_PORT:-80}:80'
+      - '${HTTPS_PORT:-443}:443'
+    environment:
+      PUBLIC_SITE_DOMAIN: ${PUBLIC_SITE_DOMAIN}
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/sitio.conf.template:/etc/nginx/templates/sitio.conf.template:ro
+      - ./deploy/nginx/limites.conf:/etc/nginx/plataforma/limites.conf:ro
+      - ./deploy/nginx/upstream.conf:/etc/nginx/plataforma/upstream.conf:ro
+      - ./deploy/nginx/ubicaciones.conf:/etc/nginx/plataforma/ubicaciones.conf:ro
+      - ./deploy/nginx/cabeceras-proxy.conf:/etc/nginx/plataforma/cabeceras-proxy.conf:ro
+      # Certificado institucional, colocado a mano en el servidor (README, «Certificado SSL»). Nunca en git.
+      - ./deploy/nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    networks: [interna]
+
+networks:
+  interna: {}
+
+volumes:
+  postgres-data: {}

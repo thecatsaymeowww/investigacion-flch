@@ -16,6 +16,8 @@ const cabecerasDeSeguridad = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Imagen de Docker (Dockerfile): servidor mínimo en .next/standalone, sin node_modules completos.
+  output: 'standalone',
   // Los archivos los entrega Payload (/api/media/file/...) con su control de acceso;
   // se muestran con <img> igual que en el prototipo, sin pasar por el optimizador.
   images: { unoptimized: true },

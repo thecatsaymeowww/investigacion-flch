@@ -1,0 +1,37 @@
+# Contexto de la imagen: solo el código. Nada de secretos, datos ni salidas locales.
+.git
+node_modules
+.next
+next-env.d.ts
+*.tsbuildinfo
+
+# Credenciales y certificados (también ignorados por git)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+deploy/nginx/certs
+
+# Datos: archivos subidos, respaldos, contenido real con datos personales y la referencia de diseño
+media
+scripts/semilla/prensa-y-literatura
+redesign
+*.dump
+*.pgdump
+*.backup
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Salidas y temporales
+coverage
+.lighthouseci
+*.log
+.eslintcache
+.cache
+tmp
+temp

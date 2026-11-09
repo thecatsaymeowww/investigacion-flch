@@ -9,5 +9,10 @@
 # Los .sql se copian al contenedor de Postgres (Linux) y los ejecuta psql, incluidos sus metacomandos
 # (\if, \set, \echo): se extraen siempre con LF, aunque core.autocrlf=true.
 *.sql text eol=lf
+# Lo que se ejecuta o monta en contenedores Linux (bash, Nginx, Docker): siempre LF.
+*.sh text eol=lf
+deploy/nginx/* text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
 migrations/*.ts -whitespace
 app/(sitio)/fuentes/**/OFL.txt -whitespace

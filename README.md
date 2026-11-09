@@ -7,8 +7,8 @@ hacen Payload CMS 3 + su plugin multi-tenant y la capa de lectura `lib/cms`.
 
 Diseño: réplica del prototipo aprobado (Astro, que no forma parte de este repositorio) llevado a Next.js.
 
-> Estado: **funciona en localhost**. El dominio público (`gi.letras.unmsm.edu.pe`), el
-> SSL, Nginx y el acceso al panel se configuran en la etapa de publicación.
+> Estado: **lista para el primer entregable** en `https://investigacionletras.unmsm.edu.pe`, con Docker (Nginx +
+> app + PostgreSQL): ver «Producción con Docker». El acceso restringido al panel queda para una etapa posterior.
 
 ## Arranque local
 
@@ -338,11 +338,102 @@ El registro del servidor queda en la carpeta temporal del sistema (`verificar-se
 Conexiones externas de `pnpm verificar`: el registro de npm (auditoría) y Google Fonts (build). La telemetría de
 Next está desactivada para todos los procesos.
 
+## Producción con Docker
+
+Tres contenedores en una red interna (`docker-compose.prod.yml`): **nginx** (único con puertos publicados, 80 y 443,
+con el certificado institucional), **app** (Next.js + Payload, imagen del `Dockerfile`, standalone) y **postgres**
+(PostgreSQL 16, volumen `postgres-data`). La app y Postgres no son accesibles desde fuera de la máquina. Los archivos
+subidos al CMS viven en `./media` del servidor (volumen de la app).
+
+Requisitos en la VM: Docker Engine con Compose v2, `git`, `openssl`; el DNS de `investigacionletras.unmsm.edu.pe`
+apuntando a la VM y los puertos 80 y 443 abiertos.
+
+### 1. Código y credenciales
+
+```bash
+git clone git@github.com:thecatsaymeowww/investigacion-flch.git   # repositorio privado: clave de despliegue
+cd investigacion-flch
+cp deploy/produccion.env.example .env && chmod 600 .env
+```
+
+Editar `.env` **en la VM** y sustituir cada `CAMBIAR` por un valor nuevo, solo de producción:
+
+```bash
+openssl rand -hex 32                          # POSTGRES_PASSWORD, PLATAFORMA_APP_PASSWORD, PLATAFORMA_OWNER_PASSWORD (uno distinto cada vez)
+openssl rand -base64 48 | tr -d '\n/+='       # PAYLOAD_SECRET
+```
+
+El `.env` está en `.gitignore` (igual que cualquier `.env.*` y la carpeta del certificado): nunca se sube al repositorio
+ni entra en la imagen. Nunca imprimir el `.env` completo para depurar.
+
+### 2. Certificado SSL
+
+El certificado es institucional: se coloca a mano y **no se renueva solo**. Nginx lo lee de `deploy/nginx/certs/`
+(ignorada por git). De lo que entrega la entidad (`.key`, dos `.crt` y un `.pfx` que no hace falta):
+
+```bash
+# 1. Identificar cada .crt: el del dominio tiene subject = el dominio; el intermedio es su «issuer».
+openssl x509 -noout -subject -issuer -dates -in ARCHIVO.crt
+# 2. Comprobar que la clave es la del certificado (los dos resultados deben ser idénticos).
+openssl x509 -noout -pubkey -in DOMINIO.crt | openssl md5
+openssl pkey -pubout -in CLAVE.key | openssl md5
+# 3. Armar los dos archivos (dominio primero, intermedio después).
+mkdir -p deploy/nginx/certs
+cat DOMINIO.crt INTERMEDIO.crt > deploy/nginx/certs/fullchain.pem
+cp CLAVE.key deploy/nginx/certs/privkey.pem && chmod 600 deploy/nginx/certs/privkey.pem
+```
+
+Si la clave viene cifrada (pide contraseña), quitársela antes: `openssl pkey -in CLAVE.key -out privkey.pem`.
+**Renovación:** antes de la fecha `notAfter`, repetir los pasos y `docker compose -f docker-compose.prod.yml restart nginx`.
+
+### 3. Primera carga de datos (solo la primera vez)
+
+El contenido inicial (grupos, landings, integrantes, usuarios del panel y fotos) llega en un **paquete fuera de git**
+(contiene datos personales y los usuarios del panel): `plataforma.dump` (volcado de PostgreSQL, con todas las
+migraciones aplicadas) y `media.tar.gz`. Copiarlo a la VM (por ejemplo con `scp`) y, desde la raíz del repositorio:
+
+```bash
+bash deploy/primera-carga.sh /ruta/al/paquete
+```
+
+Construye la imagen, arranca Postgres, restaura el volcado, crea los roles `plataforma_owner` y `plataforma_app`
+(`deploy/postgres/roles.sql`, con las contraseñas del `.env`, sin mostrarlas) y extrae las fotos en `./media`. Se niega
+si la base ya tiene tablas o `./media` no está vacía. Después, borrar el paquete de la VM.
+
+### 4. Arrancar
+
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml ps        # los tres «healthy» / «running»
+```
+
+Abrir `https://investigacionletras.unmsm.edu.pe` y `https://investigacionletras.unmsm.edu.pe/admin`. **En cuanto
+esté arriba, cambiar desde el panel la contraseña de cada cuenta** (vienen del entorno de pruebas).
+
+### Actualizar a una versión nueva
+
+```bash
+git pull
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+Si la versión nueva trae **migraciones** (carpeta `migrations/`), la app no debe arrancar sin aplicarlas: `pnpm migrate`
+está limitado a bases desechables locales (`scripts/migrar.mjs`) y la migración de producción necesita un procedimiento
+propio, revisado y autorizado. Hasta entonces, no desplegar versiones con migraciones nuevas.
+
+### Diagnóstico
+
+- `docker compose -f docker-compose.prod.yml logs -f app` (o `nginx`, `postgres`).
+- **nginx no arranca:** casi siempre el certificado (faltan `fullchain.pem`/`privkey.pem` o la clave no corresponde).
+  `docker compose -f docker-compose.prod.yml run --rm --no-deps nginx nginx -t` muestra el error.
+- **app no llega a healthy:** una variable de `.env` vacía o con el valor de la plantilla (la app se niega a arrancar
+  con un `PAYLOAD_SECRET` de ejemplo o corto: `lib/entorno.ts`), o la base sin los roles (falta la primera carga).
+
 ## Pendiente (siguientes etapas)
 
-- Publicación: dominio, SSL, Nginx (la plantilla de límites de `deploy/nginx/` está preparada, no desplegada),
-  acceso al panel solo por red interna/VPN (sin 2FA nativo).
-- Backups de base + `media/` con restauración probada.
+- Acceso al panel solo por red interna/VPN (sin 2FA nativo). Calibrar con TI las tasas de `deploy/nginx/limites.conf`.
+- Procedimiento de migraciones en producción (ver «Actualizar a una versión nueva»).
+- Backups automáticos de base + `media/` con restauración probada.
 - Migración del contenido de producción desde Strapi.
 - Archivo con Meilisearch (hoy filtra en el navegador, como el prototipo).
 - Sesión de prueba del panel con un editor real (D11).
