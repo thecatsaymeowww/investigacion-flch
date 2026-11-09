@@ -8,7 +8,8 @@ hacen Payload CMS 3 + su plugin multi-tenant y la capa de lectura `lib/cms`.
 Diseño: réplica del prototipo aprobado (Astro, que no forma parte de este repositorio) llevado a Next.js.
 
 > Estado: **lista para el primer entregable** en `https://investigacionletras.unmsm.edu.pe`, con Docker (Nginx +
-> app + PostgreSQL): ver «Producción con Docker». El acceso restringido al panel queda para una etapa posterior.
+> app + PostgreSQL): ver «Producción con Docker». El panel (`/admin`) es accesible desde Internet, por decisión del
+> usuario (09-11-2026); lo protegen el inicio de sesión, el bloqueo de Payload tras 5 fallos y los límites de Nginx.
 
 ## Arranque local
 
@@ -431,7 +432,7 @@ propio, revisado y autorizado. Hasta entonces, no desplegar versiones con migrac
 
 ## Pendiente (siguientes etapas)
 
-- Acceso al panel solo por red interna/VPN (sin 2FA nativo). Calibrar con TI las tasas de `deploy/nginx/limites.conf`.
+- Calibrar con TI las tasas de `deploy/nginx/limites.conf`.
 - Procedimiento de migraciones en producción (ver «Actualizar a una versión nueva»).
 - Backups automáticos de base + `media/` con restauración probada.
 - Migración del contenido de producción desde Strapi.
