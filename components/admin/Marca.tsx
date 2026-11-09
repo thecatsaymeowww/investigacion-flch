@@ -1,7 +1,7 @@
 /**
- * Marca del panel de Payload (F15): logo de la pantalla de acceso e icono del menú, solo con texto y la misma identidad
- * que la cabecera del sitio (components/flch/Cabecera: filete dorado a la izquierda, azul institucional). Sin imágenes
- * ni fuentes externas: el escudo se retiró en la etapa 4.1 (D2). Se registran en payload.config.ts
+ * Marca del panel de Payload (F15): logo de la pantalla de acceso (solo texto) e icono del menú (el escudo de la UNMSM,
+ * desde el 09-11-2026), con la misma identidad que la cabecera del sitio (components/flch/Cabecera: filete dorado a la
+ * izquierda, azul institucional). Sin fuentes externas. Se registran en payload.config.ts
  * (`admin.components.graphics`) y llegan al panel por app/(payload)/admin/importMap.js (regenerado).
  * Colores como en app/(sitio)/globals.css (.tema-flch): azul #192b52 y oro #d9a53a (decorativo). El panel usa el tema
  * oscuro: el texto del logo toma el color de texto del tema (--theme-text) para leerse sobre el fondo oscuro.
@@ -34,11 +34,10 @@ export function Logo() {
   )
 }
 
-/** Icono de la miga de pan del panel. Sus estilos y el ajuste de la caja de Payload están en Marca.module.css. */
+/**
+ * Icono de la miga de pan del panel: el escudo de la UNMSM (public/img/escudo-unmsm.svg, el mismo de la cabecera del
+ * sitio y del icono de la pestaña; decisión del usuario del 09-11-2026). Estilos en Marca.module.css.
+ */
 export function Icon() {
-  return (
-    <span aria-label="FLCH" className={m.icono}>
-      FLCH
-    </span>
-  )
+  return <img src="/img/escudo-unmsm.svg" alt="UNMSM" width={1006} height={1188} className={m.icono} />
 }

@@ -21,7 +21,13 @@
   color: var(--blanco);
   text-decoration: none;
 }
-/* Marca textual: un filete oro a la izquierda sostiene el bloque en lugar del escudo (sin imagen inventada). */
+/* Escudo de la UNMSM a la izquierda del filete, a la altura del bloque de texto. */
+.escudo {
+  flex: none;
+  height: 44px;
+  width: auto;
+}
+/* Marca textual: un filete oro a la izquierda sostiene el bloque. */
 .textos {
   display: flex;
   flex-direction: column;
@@ -44,6 +50,9 @@
 @media (max-width: 480px) {
   .inner {
     gap: 14px;
+  }
+  .escudo {
+    height: 38px;
   }
   .facultad {
     font-size: 16px;

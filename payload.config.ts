@@ -38,6 +38,8 @@ export default buildConfig({
     meta: {
       titleSuffix: ' · FLCH · Grupos de investigación',
       description: 'Panel de edición de los grupos de investigación de la Facultad de Letras y Ciencias Humanas (UNMSM).',
+      // Icono de la pestaña: el escudo de la UNMSM, el mismo del sitio (en lugar del de Payload).
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/img/escudo-unmsm.svg' }],
     },
     // Tema oscuro fijo, por decisión del usuario (06-11-2026); sin selector claro/oscuro en la cuenta.
     theme: 'dark',

@@ -9,6 +9,8 @@ const etiqueta = Public_Sans({ subsets: ['latin'], variable: '--fuente-etiqueta'
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
   title: 'Grupos de investigación · FLCH-UNMSM',
+  // Icono de la pestaña: el escudo de la UNMSM (public/img/escudo-unmsm.svg, el mismo de la cabecera y del panel).
+  icons: { icon: { url: '/img/escudo-unmsm.svg', type: 'image/svg+xml' } },
 }
 
 export default function SitioLayout({ children }: { children: React.ReactNode }) {

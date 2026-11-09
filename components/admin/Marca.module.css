@@ -1,20 +1,10 @@
-/* Icono «FLCH» del panel (Marca.tsx). Payload reserva para el icono de la miga de pan («FLCH / Panel de control») una
-   caja fija de 16 × 16 px (.step-nav .step-nav__home), pensada para su logotipo cuadrado: con el texto «FLCH» solo se
-   veía «FL». Solo cuando la caja contiene este icono, se adapta a su ancho. */
+/* Icono del panel (Marca.tsx): el escudo de la UNMSM. Payload reserva para el icono de la miga de pan
+   («escudo / Panel de control») una caja fija de 16 × 16 px (.step-nav .step-nav__home), pensada para un logotipo
+   cuadrado; el escudo es más alto que ancho. Solo cuando la caja contiene este icono, se adapta a él. */
 .icono {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   height: 22px;
-  padding: 0 6px;
-  border-radius: 3px;
-  background: #192b52;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1;
-  white-space: nowrap;
+  width: auto;
 }
 
 :global(.step-nav__home):has(.icono) {
