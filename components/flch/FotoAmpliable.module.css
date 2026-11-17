@@ -1,0 +1,80 @@
+/* Botón que envuelve la foto del hero: sin estilo propio, solo el cursor y el foco. */
+.disparador {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  border-radius: var(--radio);
+}
+.disparador:focus-visible {
+  outline: 2px solid var(--oro-claro);
+  outline-offset: 3px;
+}
+
+/* Vista ampliada (diálogo nativo) */
+.vista {
+  max-width: calc(100% - 2rem);
+  max-height: calc(100% - 2rem);
+  margin: auto;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+}
+.vista::backdrop {
+  background: rgba(10, 18, 36, 0.88);
+}
+.vista[open] {
+  animation: entrar 0.12s ease-out;
+}
+@keyframes entrar {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+.figura {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+/* Resolución original; solo se reduce si no cabe en la pantalla. */
+.figura img {
+  display: block;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - 7rem);
+  max-height: calc(100dvh - 7rem);
+  width: auto;
+  height: auto;
+  border-radius: var(--radio-s);
+}
+.leyenda {
+  font: italic 400 17px/1.35 var(--f-serif);
+  color: var(--blanco);
+  text-align: center;
+  text-wrap: balance;
+}
+.cerrar {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radio-s);
+  background: rgba(0, 0, 0, 0.35);
+  font: 400 24px/1 var(--f-serif);
+  color: var(--blanco);
+}
+.cerrar:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+.cerrar:focus-visible {
+  outline: 2px solid var(--oro-claro);
+  outline-offset: 2px;
+}

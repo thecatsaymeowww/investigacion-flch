@@ -1,6 +1,7 @@
 import type { DatosLanding, EntradaDirectorio } from '@/lib/cms'
 import { etiquetaEscuela } from '@/lib/escuelas'
 import { Foto } from './Foto'
+import { FotoAmpliable } from './FotoAmpliable'
 import h from './HeroGrupo.module.css'
 import { MenuSubgrupos } from './MenuSubgrupos'
 
@@ -36,7 +37,19 @@ export function HeroGrupo({ d, subgrupos }: { d: NonNullable<DatosLanding>; subg
           </div>
         </div>
         <figure className={h.figura}>
-          <Foto img={editorial.foto} sigla={id.nombre} className={h.foto} prioridad />
+          {/* sizes holgado a propósito: en escritorio fuerza el derivado `grande` (1600 px) aunque ocupe ~500 px, para que no se vea pixelada. */}
+          {editorial.foto?.original ? (
+            // Foto propia del grupo: se amplía al pulsarla (la genérica de la fachada no tiene original y no se amplía).
+            <FotoAmpliable
+              img={{ ...editorial.foto, original: editorial.foto.original }}
+              leyenda={`Integrantes del grupo ${id.nombre}`}
+              className={h.foto}
+              prioridad
+              sizes="(max-width: 600px) 100vw, 1000px"
+            />
+          ) : (
+            <Foto img={editorial.foto} sigla={id.nombre} className={h.foto} prioridad sizes="(max-width: 600px) 100vw, 1000px" />
+          )}
           {(editorial.pie || editorial.credito) && (
             <figcaption className={h.pie}>
               {editorial.pie}

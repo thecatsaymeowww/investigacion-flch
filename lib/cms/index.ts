@@ -17,15 +17,16 @@ const delGrupo = (grupo: number, extra: Where[] = []): Where => ({
   and: [{ grupo: { equals: grupo } }, { _status: { equals: 'published' } }, ...extra],
 })
 
-export type Imagen = { src: string; alt: string; srcSet?: string } | null
+export type Imagen = { src: string; alt: string; srcSet?: string; original?: string } | null
 
 /**
  * Solo expone archivos públicos; uno privado o no poblado no se muestra, ni su original ni sus tamaños (subfase 5b).
  * `src` es el tamaño `media` (960 px) si existe, y `srcSet` lista los tamaños para que el navegador elija (lib/archivos.ts).
+ * `original` es el archivo subido (acotado a 2400 px, ORIGINAL_MAXIMO), para la vista ampliada.
  */
 function imagen(m: number | Media | null | undefined): Imagen {
   if (!m || typeof m !== 'object' || m.visibilidad !== 'publica' || !m.url) return null
-  return { src: m.sizes?.media?.url ?? m.url, alt: m.alt, srcSet: srcSetDe(m.sizes) }
+  return { src: m.sizes?.media?.url ?? m.url, alt: m.alt, srcSet: srcSetDe(m.sizes), original: m.url }
 }
 
 /**
