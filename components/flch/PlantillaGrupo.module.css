@@ -70,10 +70,10 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
 }
-/* Tres cifras (sin «Proyectos», que no tiene fuente): tres columnas iguales, sin huecos ni una cifra suelta en una
-   segunda fila; en móvil, una debajo de otra. */
+/* Hasta tres cifras (fundación, integrantes, líneas; las que tengan dato): tantas columnas iguales como cifras
+   (--columnas, desde CifrasGrupo), sin huecos ni una cifra suelta en una segunda fila; en móvil, una debajo de otra. */
 .cifrasTres {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--columnas, 3), minmax(0, 1fr));
 }
 @media (max-width: 560px) {
   .cifrasTres {
