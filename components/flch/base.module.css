@@ -33,6 +33,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Recorte centrado en ambos ejes: se pierden por igual los bordes que no caben. */
+  object-position: center;
 }
 /* El tamaño de la sigla sigue al ancho del bloque (consultas de contenedor), no al de la ventana. */
 .sinFoto {

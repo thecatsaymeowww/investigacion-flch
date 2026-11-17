@@ -23,10 +23,14 @@ export type Imagen = { src: string; alt: string; srcSet?: string; original?: str
  * Solo expone archivos públicos; uno privado o no poblado no se muestra, ni su original ni sus tamaños (subfase 5b).
  * `src` es el tamaño `media` (960 px) si existe, y `srcSet` lista los tamaños para que el navegador elija (lib/archivos.ts).
  * `original` es el archivo subido (acotado a 2400 px, ORIGINAL_MAXIMO), para la vista ampliada.
+ * Payload no genera derivados más anchos que el original: si falta `grande`, el original entra en el `srcSet` con su
+ * ancho real, para que una foto de 718 px no se sirva con el derivado de 480 px estirado.
  */
 function imagen(m: number | Media | null | undefined): Imagen {
   if (!m || typeof m !== 'object' || m.visibilidad !== 'publica' || !m.url) return null
-  return { src: m.sizes?.media?.url ?? m.url, alt: m.alt, srcSet: srcSetDe(m.sizes), original: m.url }
+  const derivados = srcSetDe(m.sizes)
+  const conOriginal = !m.sizes?.grande?.url && m.width ? [derivados, `${m.url} ${m.width}w`].filter(Boolean).join(', ') : derivados
+  return { src: m.sizes?.media?.url ?? m.url, alt: m.alt, srcSet: conOriginal, original: m.url }
 }
 
 /**
